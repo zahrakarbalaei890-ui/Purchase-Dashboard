@@ -65,7 +65,7 @@ label{font-size:12px;color:#59636e;display:block;margin-bottom:6px}select,input{
 </div>
 <script>
 // ---- Password gate (client-side only - see note below) ----
-const PASSWORD_HASH = "a8fd7dc0e1bf71874f7bae013d89b07da30f44bdb001c6e44071388ce6fa380"; // default password: 1404
+const PASSWORD_HASH = "a8fd7dc0e1bf71874f7bae013d89b07da30f44bdb001c6e44071388ce6fa380f"; // default password: 1404
 async function sha256Hex(str){
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
