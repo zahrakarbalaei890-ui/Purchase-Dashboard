@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>داشبورد خرید — نسخه وب ۱</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6f9;color:#17202a;font-family:Tahoma,Arial,sans-serif}
+header{background:#163a63;color:#fff;padding:22px 28px;position:sticky;top:0;z-index:10}
+h1{margin:0 0 6px;font-size:24px}.sub{opacity:.85;font-size:12px}
+.wrap{max-width:1450px;margin:auto;padding:20px}
+.filters{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;background:#fff;padding:16px;border-radius:14px;box-shadow:0 2px 10px #0000000d}
+label{font-size:12px;color:#59636e;display:block;margin-bottom:6px}select,input{width:100%;padding:10px;border:1px solid #d8dde3;border-radius:9px;background:#fff;font-family:inherit}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}.card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 10px #0000000d}.k{font-size:12px;color:#68737d}.v{font-size:22px;font-weight:700;margin-top:8px}
+.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.panel{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 10px #0000000d;margin-bottom:16px}
+.panel h2{font-size:16px;margin:0 0 14px}.bar{height:28px;margin:7px 0;display:flex;align-items:center;gap:8px}.bar span{height:100%;border-radius:6px;background:#2f6fad;min-width:2px}.bar b{font-size:11px;white-space:nowrap}
+.tableWrap{overflow:auto;max-height:600px}table{border-collapse:collapse;width:100%;font-size:12px}th,td{padding:9px;border-bottom:1px solid #edf0f2;text-align:right;white-space:nowrap}th{position:sticky;top:0;background:#eef3f8;z-index:1}tr.clickable{cursor:pointer}tr.clickable:hover{background:#f5f9fd}
+#details{display:none}.pill{display:inline-block;background:#eef3f8;padding:5px 9px;border-radius:20px;font-size:11px;margin:3px}
+@media(max-width:900px){.filters{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+@media(max-width:560px){.filters,.cards{grid-template-columns:1fr}.wrap{padding:10px}}
+</style>
+</head>
+<body>
+<div id="gate" style="position:fixed;inset:0;background:#163a63;display:flex;align-items:center;justify-content:center;z-index:999;font-family:Tahoma,Arial,sans-serif">
+  <div style="background:#fff;padding:32px 28px;border-radius:16px;width:300px;max-width:90vw;box-shadow:0 10px 30px #0004;text-align:center">
+    <div style="font-size:18px;font-weight:700;margin-bottom:16px;color:#163a63">ورود به داشبورد</div>
+    <input id="gatePass" type="password" placeholder="رمز عبور" style="width:100%;padding:12px;border:1px solid #d8dde3;border-radius:9px;font-size:16px;text-align:center;box-sizing:border-box" autofocus>
+    <button id="gateBtn" style="width:100%;margin-top:12px;padding:12px;border:0;border-radius:9px;background:#163a63;color:#fff;font-size:15px;cursor:pointer">ورود</button>
+    <div id="gateMsg" style="color:#c0392b;font-size:12px;margin-top:10px;min-height:16px"></div>
+  </div>
+</div>
+<div id="app" style="display:none">
+<header><h1>داشبورد مدیریت خرید</h1><div class="sub">نسخه وب ۱ — تحلیل تعاملی خرید</div></header>
+<div class="wrap">
+<section class="filters">
+<div><label>سال</label><select id="year"></select></div>
+<div><label>دسته‌بندی</label><select id="category"></select></div>
+<div><label>فروشنده</label><select id="supplier"></select></div>
+<div><label>جستجوی کالا</label><input id="itemSearch" placeholder="مثلاً بلبرینگ"></div>
+<div><label>عملیات</label><button id="reset" style="width:100%;height:39px;border:0;border-radius:9px;background:#163a63;color:white;font-family:inherit;cursor:pointer">حذف فیلترها</button></div>
+</section>
+
+<section class="cards">
+<div class="card"><div class="k">مجموع خرید</div><div class="v" id="totalAmount">0</div></div>
+<div class="card"><div class="k">تعداد ردیف خرید</div><div class="v" id="lineCount">0</div></div>
+<div class="card"><div class="k">تعداد کالا</div><div class="v" id="itemCount">0</div></div>
+<div class="card"><div class="k">تعداد فروشنده</div><div class="v" id="supplierCount">0</div></div>
+</section>
+
+<div class="grid">
+<div>
+<section class="panel"><h2>خرید به تفکیک کالا</h2><div class="tableWrap">
+<table><thead><tr><th>کد کالا</th><th>عنوان کالا</th><th>دسته</th><th>مقدار</th><th>مبلغ خرید</th><th>دفعات</th></tr></thead><tbody id="itemTable"></tbody></table>
+</div></section>
+<section class="panel" id="details"><h2>جزئیات خرید کالا</h2><div id="detailHead"></div><div class="tableWrap">
+<table><thead><tr><th>تاریخ</th><th>فروشنده</th><th>فاکتور</th><th>مقدار</th><th>نرخ واحد</th><th>مبلغ</th></tr></thead><tbody id="detailTable"></tbody></table>
+</div></section>
+</div>
+<div>
+<section class="panel"><h2>خرید به تفکیک دسته</h2><div id="categoryBars"></div></section>
+<section class="panel"><h2>خرید به تفکیک سال / دوره</h2><div id="periodBars"></div></section>
+</div>
+</div>
+</div>
+</div>
+<script>
+// ---- Password gate (client-side only - see note below) ----
+const PASSWORD_HASH = "a8fd7dc0e1bf71874f7bae013d89b07da30f44bdb001c6e44071388ce6fa380"; // default password: 1404
+async function sha256Hex(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function tryUnlock(){
+  const val = document.getElementById('gatePass').value;
+  const h = await sha256Hex(val);
+  if(h === PASSWORD_HASH){
+    sessionStorage.setItem('dashOK','1');
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='block';
+    boot();
+  } else {
+    document.getElementById('gateMsg').textContent = 'رمز اشتباه است';
+  }
+}
+document.getElementById('gateBtn').addEventListener('click', tryUnlock);
+document.getElementById('gatePass').addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlock(); });
+
+if(sessionStorage.getItem('dashOK')==='1'){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('app').style.display='block';
+  boot();
+}
+
+// ---- Load data from data.json and boot the dashboard ----
+let rows = [];
+const SEASON_NAMES = ['بهار','تابستان','پاییز','زمستان'];
+function enrichRows(list){
+  list.forEach(r=>{
+    r.season = SEASON_NAMES[Math.floor((r.month-1)/3)];
+    r.period = r.season + ' ' + r.year;
+    r.unitPrice = r.qty ? (r.amount / r.qty) : 0;
+  });
+  return list;
+}
+function boot(){
+  fetch('./data.json?t=' + Date.now())
+    .then(r=>r.json())
+    .then(data=>{
+      rows = enrichRows(data.rows);
+      initDashboard();
+    })
+    .catch(err=>{
+      document.getElementById('app').innerHTML = '<div style="padding:40px;text-align:center;color:#c0392b">خطا در بارگذاری data.json</div>';
+      console.error(err);
+    });
+}
+
+function initDashboard(){
+const fa = n => new Intl.NumberFormat('fa-IR',{maximumFractionDigits:2}).format(n||0);
+const money = n => fa(n) + ' ریال';
+const uniq = a => [...new Set(a.filter(x=>x!==''))].sort((a,b)=>String(a).localeCompare(String(b),'fa'));
+
+const yearEl=document.getElementById('year'), catEl=document.getElementById('category'),
+supEl=document.getElementById('supplier'), searchEl=document.getElementById('itemSearch');
+
+function fill(el, vals, all='همه'){
+  el.innerHTML='<option value="">'+all+'</option>'+vals.map(v=>`<option>${esc(v)}</option>`).join('');
+}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function filtered(){
+  const y=yearEl.value,c=catEl.value,s=supEl.value,q=searchEl.value.trim().toLowerCase();
+  return rows.filter(r=>(!y||String(r.year)===y)&&(!c||r.category===c)&&(!s||r.supplier===s)&&(!q||r.item.toLowerCase().includes(q)||r.itemCode.includes(q)));
+}
+function aggregate(rs,key){
+  const m=new Map();
+  rs.forEach(r=>{const k=r[key]||'نامشخص';let x=m.get(k);if(!x)x={key:k,amount:0,qty:0,count:0};x.amount+=r.amount;x.qty+=r.qty;x.count++;m.set(k,x)});
+  return [...m.values()].sort((a,b)=>b.amount-a.amount);
+}
+function render(){
+  const rs=filtered();
+  const items=aggregate(rs,'itemCode');
+  const itemMap=new Map();
+  rs.forEach(r=>{let x=itemMap.get(r.itemCode);if(!x)x={code:r.itemCode,item:r.item,category:r.category,qty:0,amount:0,count:0};x.qty+=r.qty;x.amount+=r.amount;x.count++;itemMap.set(r.itemCode,x)});
+  const items2=[...itemMap.values()].sort((a,b)=>b.amount-a.amount);
+  document.getElementById('totalAmount').textContent=money(rs.reduce((a,r)=>a+r.amount,0));
+  document.getElementById('lineCount').textContent=fa(rs.length);
+  document.getElementById('itemCount').textContent=fa(items2.length);
+  document.getElementById('supplierCount').textContent=fa(new Set(rs.map(r=>r.supplier)).size);
+
+  document.getElementById('itemTable').innerHTML=items2.map(x=>`<tr class="clickable" onclick="showDetails('${esc(x.code)}')"><td>${esc(x.code)}</td><td>${esc(x.item)}</td><td>${esc(x.category)}</td><td>${fa(x.qty)}</td><td>${money(x.amount)}</td><td>${fa(x.count)}</td></tr>`).join('') || '<tr><td colspan="6">موردی پیدا نشد.</td></tr>';
+
+  drawBars('categoryBars',aggregate(rs,'category').slice(0,12));
+  drawBars('periodBars',aggregate(rs,'period').slice(0,12));
+}
+function drawBars(id,arr){
+  const box=document.getElementById(id); if(!arr.length){box.innerHTML='موردی وجود ندارد.';return}
+  const max=Math.max(...arr.map(x=>x.amount),1);
+  box.innerHTML=arr.map(x=>`<div class="bar"><b>${esc(x.key)}</b><span style="width:${Math.max(2,Math.round(x.amount/max*100))}%"></span><small>${money(x.amount)}</small></div>`).join('');
+}
+function showDetails(code){
+  const rs=filtered().filter(r=>r.itemCode===code);
+  if(!rs.length)return;
+  document.getElementById('details').style.display='block';
+  document.getElementById('detailHead').innerHTML=`<span class="pill">کد: ${esc(code)}</span><span class="pill">${esc(rs[0].item)}</span><span class="pill">${esc(rs[0].category)}</span>`;
+  document.getElementById('detailTable').innerHTML=rs.sort((a,b)=>a.date.localeCompare(b.date)).map(r=>`<tr><td>${esc(r.date)}</td><td>${esc(r.supplier)}</td><td>${esc(r.invoice)||'—'}</td><td>${fa(r.qty)} ${esc(r.unit)}</td><td>${money(r.unitPrice)}</td><td>${money(r.amount)}</td></tr>`).join('');
+  document.getElementById('details').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function rebuildSuppliers(){
+  const y=yearEl.value,c=catEl.value;
+  const vals=uniq(rows.filter(r=>(!y||String(r.year)===y)&&(!c||r.category===c)).map(r=>r.supplier));
+  fill(supEl,vals);
+}
+function rebuildCategories(){
+  const y=yearEl.value;
+  fill(catEl,uniq(rows.filter(r=>!y||String(r.year)===y).map(r=>r.category)));
+}
+fill(yearEl,uniq(rows.map(r=>r.year)));
+fill(catEl,uniq(rows.map(r=>r.category)));
+fill(supEl,uniq(rows.map(r=>r.supplier)));
+[yearEl,catEl,supEl,searchEl].forEach(e=>e.addEventListener('input',()=>{if(e===yearEl){rebuildCategories();rebuildSuppliers()}else if(e===catEl){rebuildSuppliers()}render()}));
+document.getElementById('reset').onclick=()=>{yearEl.value='';catEl.value='';supEl.value='';searchEl.value='';rebuildCategories();rebuildSuppliers();render();document.getElementById('details').style.display='none'};
+render();
+
+}
+</script>
+</body></html>
