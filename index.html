@@ -70,8 +70,16 @@ async function sha256Hex(str){
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
 }
+function normalizeDigits(s){
+  const fa = '۰۱۲۳۴۵۶۷۸۹', ar = '٠١٢٣٤٥٦٧٨٩';
+  return s.replace(/[۰-۹٠-٩]/g, ch => {
+    let i = fa.indexOf(ch); if(i>-1) return i;
+    i = ar.indexOf(ch); if(i>-1) return i;
+    return ch;
+  });
+}
 async function tryUnlock(){
-  const val = document.getElementById('gatePass').value;
+  const val = normalizeDigits(document.getElementById('gatePass').value.trim());
   const h = await sha256Hex(val);
   if(h === PASSWORD_HASH){
     sessionStorage.setItem('dashOK','1');
