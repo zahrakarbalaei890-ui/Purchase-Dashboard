@@ -87,6 +87,7 @@ async function tryUnlock(){
     document.getElementById('app').style.display='block';
     boot();
   } else {
+    console.log('entered:', JSON.stringify(val), 'computed hash:', h, 'expected:', PASSWORD_HASH);
     document.getElementById('gateMsg').textContent = 'رمز اشتباه است';
   }
 }
