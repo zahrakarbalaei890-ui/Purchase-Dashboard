@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Purchase Intelligence | داشبورد خرید</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root{
  --nav:#0b1220;--nav2:#111b2f;--accent:#19b5ae;--accent2:#3b82f6;--purple:#7c5cff;
@@ -96,10 +97,45 @@ tr.clickable{cursor:pointer}tr.clickable:hover{background:#f7fcfc}
  .main{margin-right:0;width:100%;padding:15px}.mobile-menu{display:block}.topbar{align-items:stretch;flex-wrap:wrap}.search-global{width:100%;order:3}.periods{overflow:auto}.two,.three,.detail-grid{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.four,.dna,.detail-kpis{grid-template-columns:1fr 1fr}.page-head{align-items:start;flex-direction:column}
 }
 @media(max-width:430px){.kpis,.four,.dna,.detail-kpis{grid-template-columns:1fr}.hero .hero-row{flex-direction:column;align-items:flex-start}}
+
+/* Login screen inspired by the supplied Ramoos sign-in page */
+.login-screen{position:fixed;inset:0;z-index:200;background:#f3f5f8;display:grid;grid-template-columns:1.2fr 1fr;direction:ltr}
+.login-left{display:flex;align-items:center;justify-content:center;padding:28px;direction:rtl}
+.login-card{width:min(390px,100%);background:#fff;border:1px solid #e2e7ee;border-radius:18px;padding:30px;box-shadow:0 10px 26px rgba(18,32,55,.08)}
+.login-card h2{font-size:20px;margin:0 0 8px;color:#202b3d}.login-card .hint{font-size:11px;color:#8b96a8;margin:0 0 28px;line-height:2}
+.login-field{display:block;margin:15px 0}.login-field span{display:block;font-size:11px;color:#4e5b70;margin-bottom:8px;font-weight:700}
+.login-field input{width:100%;height:46px;border:1px solid #e0e5ec;border-radius:10px;background:#f8fafc;padding:0 14px;outline:none;font-size:13px}
+.login-field input:focus{border-color:#2864e8;box-shadow:0 0 0 3px rgba(40,100,232,.1)}
+.login-submit{width:100%;height:46px;border:0;border-radius:10px;background:#215be3;color:#fff;font-weight:800;box-shadow:0 8px 18px rgba(33,91,227,.2);margin-top:8px}
+.login-error{font-size:11px;color:#c43b4a;min-height:18px;margin-top:10px}
+.login-foot{font-size:10px;color:#9aa4b4;text-align:center;margin-top:18px}
+.login-brand{background:linear-gradient(155deg,#101b37,#203f9c);color:#fff;display:flex;align-items:center;justify-content:center;padding:40px;position:relative;overflow:hidden;direction:rtl}
+.login-brand:before{content:"";position:absolute;width:360px;height:360px;border:1px solid rgba(255,255,255,.13);border-radius:50%;right:-150px;bottom:-160px}
+.login-brand-inner{position:relative;z-index:1;width:min(430px,100%)}
+.login-logo{width:64px;height:64px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.1);border-radius:18px;display:grid;place-items:center;font-size:27px;font-weight:900;margin-bottom:26px}
+.login-brand h1{font-size:31px;margin:0 0 12px}.login-brand p{font-size:13px;color:#c7d2ec;line-height:2;margin:0}
+.upload-drop{border:1.5px dashed #b8c7d9;border-radius:18px;padding:28px;text-align:center;background:#f8fbff;cursor:pointer;transition:.15s}
+.upload-drop:hover{border-color:var(--accent2);background:#f2f7ff}.upload-drop .upload-icon{font-size:32px;margin-bottom:8px}.upload-drop strong{display:block;margin-bottom:6px}.upload-drop small{color:var(--muted);line-height:2}
+.upload-status{border-radius:12px;padding:12px 14px;background:#f1f7ff;color:#36516f;font-size:11px;line-height:2;margin-top:12px}
+.upload-status.good{background:#eaf8f1;color:#126d4c}.upload-status.bad{background:#fff0f1;color:#a52b3b}
+.dashboard-periods{margin:0 0 14px;display:inline-flex}.dash-topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+@media(max-width:760px){.login-screen{grid-template-columns:1fr}.login-brand{display:none}.login-left{padding:18px}.login-card{padding:25px}}
+
 </style>
 </head>
 <body>
-<div class="app">
+<section class="login-screen" id="loginScreen" aria-label="ورود به داشبورد">
+ <div class="login-left"><form class="login-card" id="loginForm">
+  <h2>ورود به داشبورد</h2><p class="hint">برای ادامه، اطلاعات حساب خود را وارد کنید.</p>
+  <label class="login-field"><span>نام کاربری</span><input id="loginUser" autocomplete="username" placeholder="نام کاربری خود را وارد کنید" required></label>
+  <label class="login-field"><span>رمز عبور</span><input id="loginPass" type="password" autocomplete="current-password" placeholder="رمز عبور خود را وارد کنید" required></label>
+  <button class="login-submit" type="submit">↪ ورود به سیستم</button><div class="login-error" id="loginError" aria-live="polite"></div>
+  <div class="login-foot">© راموز — سامانه مدیریت هوشمند خرید</div>
+ </form></div>
+ <div class="login-brand"><div class="login-brand-inner"><div class="login-logo" id="loginLogo">ر</div><h1>راموز</h1><p>سامانه هوشمند تحلیل و مدیریت خرید<br>شرکت پرورش ماهی راموز</p></div></div>
+</section>
+
+<div class="app" id="mainApp" style="display:none">
 <aside class="sidebar" id="sidebar">
  <div class="brand"><div class="logo">PI</div><div><b>Purchase Intelligence</b><small>سیستم هوشمند تحلیل خرید</small></div></div>
  <div class="nav" id="nav">
@@ -119,6 +155,7 @@ tr.clickable{cursor:pointer}tr.clickable:hover{background:#f7fcfc}
   <button data-page="search"><span class="ico">⌕</span>جستجوی پیشرفته</button>
   <div class="nav-title">گزارش‌ها</div>
   <button data-page="exceptions"><span class="ico">⚠</span>فروشندگان استثنا</button>
+  <button data-page="upload"><span class="ico">⇧</span>بارگذاری فایل اکسل</button>
   <div class="nav-title">دسته‌بندی‌ها</div>
   <div id="categoryNav"></div>
  </div>
@@ -138,7 +175,7 @@ tr.clickable{cursor:pointer}tr.clickable:hover{background:#f7fcfc}
 <div class="toast" id="toast"></div>
 
 <script>
-let DATA=null, rows=[], exRows=[], charts={}, state={page:'dashboard',period:'12',query:'',cat:'همه',item:'',supplier:'',whatifRange:'همه خریدها',whatifScenario:'کاهش درصدی',whatifPeriod:'12',whatifValue:5};
+let DATA=null, rows=[], exRows=[], charts={}, uploadedData=false, state={page:'dashboard',period:'12',query:'',cat:'همه',item:'',supplier:'',whatifRange:'همه خریدها',whatifScenario:'کاهش درصدی',whatifPeriod:'12',whatifValue:5};
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const faDigits=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
 const money=n=>`${Math.round(Number(n)||0).toLocaleString('en-US').replace(/,/g,'/')} ریال`;
@@ -161,7 +198,7 @@ function unique(arr){return [...new Set(arr)]}
 function cats(){return unique(rows.map(r=>r.category)).sort((a,b)=>a.localeCompare(b,'fa'))}
 function suppliers(){return unique(rows.map(r=>r.supplier)).sort((a,b)=>a.localeCompare(b,'fa'))}
 function items(){return unique(rows.map(r=>r.item)).filter(Boolean).sort((a,b)=>a.localeCompare(b,'fa'))}
-function render(){destroyCharts();$('#sidebar').classList.remove('open');const fn={dashboard:renderDashboard,purchases:renderPurchases,items:renderItems,suppliers:renderSuppliers,'supplier-dna':renderDNA,compare:renderCompare,price:renderPrice,whatif:renderWhatIf,changed:renderChanged,ask:renderAsk,pivot:renderPivot,search:renderSearch,exceptions:renderExceptions};(fn[state.page]||renderDashboard)();$$('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===state.page));$$('#globalPeriods button').forEach(b=>b.classList.toggle('active',b.dataset.period===state.period))}
+function render(){destroyCharts();$('#sidebar').classList.remove('open');const fn={dashboard:renderDashboard,purchases:renderPurchases,items:renderItems,suppliers:renderSuppliers,'supplier-dna':renderDNA,compare:renderCompare,price:renderPrice,whatif:renderWhatIf,changed:renderChanged,ask:renderAsk,pivot:renderPivot,search:renderSearch,exceptions:renderExceptions,upload:renderUpload};(fn[state.page]||renderDashboard)();$$('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===state.page));$$('#globalPeriods button,#dashPeriods button').forEach(b=>b.classList.toggle('active',b.dataset.period===state.period));$$('#dashPeriods button').forEach(b=>b.onclick=()=>{state.period=b.dataset.period;render()})}
 function head(title,sub='',actions=''){return `<div class="page-head"><div><h1>${title}</h1>${sub?`<p>${sub}</p>`:''}</div><div class="actions">${actions}</div></div>`}
 function kpi(label,value,sub=''){return `<div class="kpi"><div class="label">${label}</div><div class="value">${value}</div>${sub?`<div class="sub">${sub}</div>`:''}</div>`}
 function renderDashboard(){
@@ -172,6 +209,7 @@ function renderDashboard(){
  const topSupAmount=groupSum(rs,'supplier'), topSupCount=groupCount(rs,'supplier');
  const alerts=priceAlerts(rs).slice(0,8);
  $('#view').innerHTML=`
+ <div class="dash-topline"><div class="periods dashboard-periods" id="dashPeriods"><button data-period="3">۳ ماهه</button><button data-period="6">۶ ماهه</button><button data-period="12">۱۲ ماهه</button><button data-period="all">کل دوره</button></div><span class="badge blue">بازه فعال: ${periodLabel(state.period)}</span></div>
  ${head('داشبورد مدیریت',`بازه فعال: ${periodLabel(state.period)}  |  آخرین فاکتور: ${DATA.meta.lastInvoiceDate}`)}
  <div class="hero"><div class="hero-row"><div><h2>مرکز فرمان خرید</h2><p>همان منطق داشبورد Excel، این بار با Drill-down، نمودارهای تعاملی، شناسنامه کالا، DNA فروشنده و تحلیل سناریو.</p></div><div class="actions"><button class="btn" onclick="go('whatif')">WHAT-IF</button><button class="btn" onclick="go('supplier-dna')">DNA فروشندگان</button></div></div><div class="hero-stat"><div><b>${money(total)}</b><span>مجموع خرید</span></div><div><b>${num(qty)}</b><span>مجموع مقدار</span></div><div><b>${num(inv)}</b><span>تعداد فاکتور</span></div><div><b>${num(it)}</b><span>تعداد کالا</span></div><div><b>${num(sp)}</b><span>فروشنده فعال</span></div></div></div>
  <div class="grid kpis" style="margin-top:14px">${kpi('مجموع خرید',money(total),'مبلغ کامل با واحد ریال')}${kpi('میانگین فاکتور',money(inv?total/inv:0),'متوسط مبلغ هر فاکتور')}${kpi('پرمصرف‌ترین کالا',esc(topQty[0]?.[0]||'—'),topQty[0]?num(topQty[0][1])+' واحد':'' )}${kpi('بیشترین سهم فروشنده',esc(topSupAmount[0]?.[0]||'—'),topSupAmount[0]?money(topSupAmount[0][1]):'')}</div>
@@ -331,6 +369,45 @@ function renderSearch(){
  $('#view').innerHTML=`${head('جستجوی پیشرفته','جستجوی چندشرطی شبیه شیت جستجوی پیشرفته Excel.')}<div class="panel"><div class="grid four"><div class="field grow"><label>متن</label><input id="sText" placeholder="کالا، فروشنده، فاکتور…"></div><div class="field"><label>دسته</label><select id="sCat"><option>همه</option>${cats().map(c=>`<option>${esc(c)}</option>`).join('')}</select></div><div class="field"><label>حداقل مبلغ</label><input id="sMin" type="number" placeholder="ریال"></div><div class="field"><label>حداکثر مبلغ</label><input id="sMax" type="number" placeholder="ریال"></div></div><div style="margin-top:12px"><button class="btn primary" id="doSearch">جستجو</button></div></div><div class="panel" style="margin-top:14px"><div id="searchResults" class="empty">شرایط را وارد کن.</div></div>`;$('#doSearch').onclick=()=>{let q=$('#sText').value,cat=$('#sCat').value,min=Number($('#sMin').value||0),max=Number($('#sMax').value||Infinity);let rs=rows.filter(r=>inPeriod(r)&&(!cat||cat==='همه'||r.category===cat)&&r.amount>=min&&r.amount<=max&&(!q||[r.item,r.supplier,r.invoice,r.itemCode,r.supplierCode].some(v=>String(v??'').includes(q))));$('#searchResults').innerHTML=`<div style="margin-bottom:9px"><span class="badge blue">${num(rs.length)} نتیجه</span></div>${purchaseTable(rs.slice(0,500))}`}
 }
 function purchaseTable(rs){return `<div class="table-wrap"><table><thead><tr><th>تاریخ</th><th>فروشنده</th><th>کالا</th><th>مقدار</th><th>نرخ</th><th>مبلغ</th></tr></thead><tbody>${rs.map(r=>`<tr class="clickable" onclick="openItem('${attr(r.item)}')"><td>${r.date}</td><td>${esc(r.supplier)}</td><td>${esc(r.item)}</td><td>${num(r.qty)}</td><td class="money">${money(r.unitPrice)}</td><td class="money">${money(r.amount)}</td></tr>`).join('')}</tbody></table></div>`}
+function renderUpload(){
+ $('#view').innerHTML=`${head('بارگذاری و به‌روزرسانی داده‌ها','فایل اصلی Excel را مستقیم از سیستم انتخاب کن؛ فایل در همین مرورگر خوانده می‌شود و به سرور ارسال نمی‌شود.')}<div class="panel">
+  <div class="upload-drop" id="excelDrop" role="button" tabindex="0"><div class="upload-icon">📂</div><strong>فایل Excel را انتخاب کن یا اینجا رها کن</strong><small>فرمت‌های پشتیبانی‌شده: XLSM، XLSX و XLS<br>فایل اصلی با تمام شیت‌ها انتخاب شود.</small><input id="excelFile" type="file" accept=".xlsm,.xlsx,.xls" hidden></div>
+  <div class="upload-status" id="uploadStatus">هنوز فایلی انتخاب نشده. با انتخاب فایل، داده‌های داشبورد در همین مرورگر به‌روزرسانی می‌شوند.</div>
+  <div class="actions" style="margin-top:14px"><button class="btn primary" id="downloadJsonBtn" disabled>دانلود data.json به‌روزشده</button><button class="btn" id="resetDataBtn">بازگشت به داده‌های سایت</button></div>
+ </div>
+ <div class="grid two" style="margin-top:14px"><div class="panel"><h3>روش کار</h3><ol style="font-size:11px;line-height:2.2;color:var(--muted);padding-right:20px"><li>فایل اصلی Excel را انتخاب کن؛ شیت «کلی» و شیت «فروشندگان استثنا» شناسایی می‌شوند.</li><li>همه نمودارها، فیلترها، شناسنامه کالا، DNA و گزارش‌ها با داده‌های خوانده‌شده دوباره ساخته می‌شوند.</li><li>برای انتشار داده جدید برای همه کاربران، فایل data.json دانلودشده را در GitHub جایگزین کن.</li></ol></div><div class="panel"><h3>نکته مهم درباره انتشار</h3><p style="font-size:11px;line-height:2;color:var(--muted)">GitHub Pages سایت ایستا است؛ بنابراین فایل انتخاب‌شده فقط در مرورگر فعلی اثر می‌گذارد و روی GitHub ذخیره نمی‌شود. برای به‌روزرسانی عمومی، data.json تولیدشده را در مخزن GitHub جایگزین و Commit کن. فایل Excel شما تغییر نمی‌کند.</p></div></div>`;
+ const drop=$('#excelDrop'),input=$('#excelFile');
+ drop.onclick=()=>input.click();drop.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click()}};
+ drop.ondragover=e=>{e.preventDefault();drop.style.borderColor='var(--accent2)'};drop.ondragleave=()=>drop.style.borderColor='';drop.ondrop=e=>{e.preventDefault();drop.style.borderColor='';if(e.dataTransfer.files[0])loadExcelFile(e.dataTransfer.files[0])};
+ input.onchange=()=>{if(input.files[0])loadExcelFile(input.files[0])};
+ $('#downloadJsonBtn').disabled=!uploadedData;$('#downloadJsonBtn').onclick=downloadUpdatedJSON;
+ $('#resetDataBtn').onclick=async()=>{uploadedData=false;await init();toast('داده‌های سایت دوباره بارگذاری شد')};
+}
+function normHead(x){return String(x??'').replace(/[يى]/g,'ی').replace(/ك/g,'ک').replace(/[\u200c\sـ]/g,'').replace(/[‌]/g,'').toLowerCase().trim()}
+function faNumString(x){return String(x??'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\u00a0/g,' ').trim()}
+function cellNum(v){if(typeof v==='number')return v;let s=faNumString(v).replace(/[,٬]/g,'').replace(/[٫]/g,'.').replace(/[^0-9.+-]/g,'');return Number(s)||0}
+function parseJalali(v){let s=faNumString(v);let m=s.match(/(13\d{2}|14\d{2}|15\d{2})\s*[\/.-]\s*(\d{1,2})\s*[\/.-]\s*(\d{1,2})/);if(!m&&v instanceof Date){return {year:v.getFullYear(),month:v.getMonth()+1,day:v.getDate(),date:`${v.getFullYear()}/${String(v.getMonth()+1).padStart(2,'0')}/${String(v.getDate()).padStart(2,'0')}`}}if(!m)return null;let year=+m[1],month=+m[2],day=+m[3];if(month<1||month>12||day<1||day>31)return null;return {year,month,day,date:`${year}/${String(month).padStart(2,'0')}/${String(day).padStart(2,'0')}`}}
+function headerInfo(grid){let hi=-1,headers=[];for(let i=0;i<Math.min(grid.length,35);i++){let h=(grid[i]||[]).map(normHead);if(h.some(x=>x.includes('فروشنده'))&&h.some(x=>x==='عنوان'||x.includes('عنوانکالا'))&&h.some(x=>x.includes('مقدار'))&&h.some(x=>x==='مبلغ'||x.includes('مبلغ'))){hi=i;headers=h;break}}if(hi<0)return null;const find=(tests)=>{for(let i=0;i<headers.length;i++)if(tests.some(t=>headers[i]===normHead(t)))return i;for(let i=0;i<headers.length;i++)if(tests.some(t=>headers[i].includes(normHead(t))))return i;return -1};return {row:hi,idx:{supplierCode:find(['کد فروشنده','کدفروشنده']),supplier:find(['فروشنده']),invoice:find(['شمارهفاکتور']),date:find(['تاریخفاکتور','تاریخ']),itemCode:find(['کد']),item:find(['عنوان']),unit:find(['واحدسنجش']),project:find(['نامپروژه']),notes:find(['توضیحات']),qty:find(['مقدار']),unitPrice:find(['نرخ']),amount:find(['مبلغ']),total:find(['جمعخرید']),category:find(['دستهبندی'])}}}
+function rowsFromSheet(grid,sheetName,knownCats){const info=headerInfo(grid);if(!info)return [];const out=[];for(let i=info.row+1;i<grid.length;i++){const a=grid[i]||[],g=info.idx;const supplier=String(a[g.supplier]??'').trim(),item=String(a[g.item]??'').trim();if(!supplier||!item)continue;const d=parseJalali(a[g.date]);if(!d)continue;const qty=cellNum(a[g.qty]),amount=cellNum(a[g.total>=0&&a[g.total]!=null&&a[g.total]!==''?g.total:g.amount]),unitPrice=cellNum(a[g.unitPrice]);let category=g.category>=0?String(a[g.category]||'').trim():'';if(!category)category=sheetName;out.push({supplierCode:String(a[g.supplierCode]??'').trim(),supplier,invoice:String(a[g.invoice]??'').trim(),date:d.date,year:d.year,month:d.month,day:d.day,itemCode:String(a[g.itemCode]??'').trim(),item,unit:String(a[g.unit]??'').trim(),project:String(a[g.project]??'').trim(),notes:String(a[g.notes]??'').trim(),qty,unitPrice,amount,category,periodKey:String(d.year*10+(d.month<=3?1:d.month<=6?2:d.month<=9?3:4)),purchaseCount:1})}return out}
+function findExceptionNames(grid){let names=[];for(let i=0;i<grid.length;i++){const row=(grid[i]||[]).map(normHead);const j=row.findIndex(x=>x.includes('نامفروشنده'));if(j>=0){for(let r=i+1;r<grid.length;r++){const v=String((grid[r]||[])[j]??'').trim();if(!v)break;if(/خلاصه|توزیع|نام فروشنده/.test(v))break;names.push(v)}break}}return [...new Set(names)]}
+function uniqueCount(a){return new Set(a.filter(x=>String(x??'').trim()!=='')).size}
+function makeDataFromWorkbook(wb){
+ const sheetNames=wb.SheetNames, mainName=sheetNames.find(n=>normHead(n)==='کلی')||sheetNames.find(n=>normHead(n)==='کلى');
+ if(!mainName)throw new Error('شیت «کلی» در فایل پیدا نشد.');
+ const mainGrid=XLSX.utils.sheet_to_json(wb.Sheets[mainName],{header:1,raw:true,defval:null});let main=rowsFromSheet(mainGrid,mainName);
+ if(!main.length)throw new Error('در شیت «کلی» ردیف خرید قابل‌خواندن پیدا نشد.');
+ const exName=sheetNames.find(n=>normHead(n)==='فروشندگاناستثنا');let exNames=exName?findExceptionNames(XLSX.utils.sheet_to_json(wb.Sheets[exName],{header:1,raw:true,defval:null})):[];
+ let raw=[];for(const name of sheetNames){if(['کلی','فروشندگاناستثنا','dashboard','جستجویپیشرفته','مقایسهفروشندگان','wcreport','wcsnapshot','جزئیاتخرید','whatchanged','askdata','pivot','universe','whatif','supplierdna'].includes(normHead(name)))continue;const grid=XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,raw:true,defval:null});raw.push(...rowsFromSheet(grid,name))}
+ let excluded=raw.filter(r=>exNames.some(n=>normHead(n)===normHead(r.supplier)));
+ // Use the canonical consolidated sheet for main records; use source-sheet records only to recover exception transaction detail.
+ const mainSuppliers=new Set(main.map(r=>normHead(r.supplier)));if(exNames.length)main=main.filter(r=>!exNames.some(n=>normHead(n)===normHead(r.supplier)));
+ const maxDate=main.map(r=>r.date).sort().at(-1)||'';const amounts=main.map(r=>r.amount);const total=amounts.reduce((a,b)=>a+b,0);const inv=uniqueCount(main.map(r=>r.invoice||r.date+'-'+r.supplier));const itemCount=uniqueCount(main.map(r=>r.itemCode||r.item));const supplierCount=uniqueCount(main.map(r=>r.supplier));const qty=main.reduce((s,r)=>s+r.qty,0);
+ const catList=[...new Set(main.map(r=>r.category))].sort((a,b)=>a.localeCompare(b,'fa'));const monthMap={};main.forEach(r=>{const k=`${r.year}/${String(r.month).padStart(2,'0')}`;monthMap[k]=(monthMap[k]||0)+r.amount});
+ const original=DATA||{};return {generatedFrom:'بارگذاری مستقیم فایل Excel',meta:{...(original.meta||{}),analysisRange:main.length?`${Math.min(...main.map(r=>r.year))} تا ${Math.max(...main.map(r=>r.year))}`:'',lastInvoiceDate:maxDate,lastUpdate:new Date().toLocaleString('fa-IR'),dashboardTotal:total,dashboardInvoices:inv,dashboardItems:itemCount,dashboardSuppliers:supplierCount,dashboardQty:qty,dashboardAvgInvoice:inv?total/inv:0,dashboardLastInvoice:maxDate,categories:catList,rowCount:main.length,excludedRowCount:excluded.length,excludedTotal:excluded.reduce((s,r)=>s+r.amount,0),monthTotals:monthMap,whatChanged:original.meta?.whatChanged||{}},excludedSuppliers:exNames,rows:main,excludedRows:excluded};
+}
+async function loadExcelFile(file){const status=$('#uploadStatus');if(!status)return;status.className='upload-status';status.textContent='در حال خواندن فایل و بازسازی داده‌ها…';try{if(!window.XLSX)throw new Error('کتابخانه خواندن Excel بارگذاری نشده؛ اتصال اینترنت را بررسی و صفحه را تازه‌سازی کن.');const buf=await file.arrayBuffer();const wb=XLSX.read(buf,{type:'array',cellDates:true});const next=makeDataFromWorkbook(wb);if(!next.rows.length)throw new Error('هیچ ردیف خرید معتبری استخراج نشد.');DATA=next;rows=DATA.rows||[];exRows=DATA.excludedRows||[];uploadedData=true;state.cat='همه';state.supplier='';state.query='';state.item='';buildCategoryNav();$('#downloadJsonBtn').disabled=false;status.className='upload-status good';status.innerHTML=`فایل <b>${esc(file.name)}</b> با موفقیت خوانده شد.<br>خریدهای اصلی: <b>${num(rows.length)}</b> ردیف | ردیف‌های استثنا: <b>${num(exRows.length)}</b> | فروشندگان استثنا: <b>${num(DATA.excludedSuppliers.length)}</b><br>اکنون تمام صفحات و نمودارها از داده‌های این فایل استفاده می‌کنند.`;toast('داده‌های داشبورد به‌روزرسانی شد');}catch(err){status.className='upload-status bad';status.textContent='خطا: '+(err.message||'فایل قابل‌خواندن نیست.');}}
+function downloadUpdatedJSON(){if(!DATA)return;const blob=new Blob([JSON.stringify(DATA)],{type:'application/json;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='data.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('فایل data.json دانلود شد')}
+
 function renderExceptions(){
  const ex=exRows;const total=ex.reduce((s,r)=>s+r.amount,0);const m=new Map();ex.forEach(r=>m.set(r.supplier,(m.get(r.supplier)||0)+r.amount));const by=[...m.entries()].sort((a,b)=>b[1]-a[1]);const months=unique(ex.map(r=>`${r.year}/${String(r.month).padStart(2,'0')}`)).sort();const mm=new Map(months.map(x=>[x,0]));ex.forEach(r=>mm.set(`${r.year}/${String(r.month).padStart(2,'0')}`,(mm.get(`${r.year}/${String(r.month).padStart(2,'0')}`)||0)+r.amount));
  $('#view').innerHTML=`${head('فروشندگان استثنا','این خریدها از تمام گزارش‌های اصلی حذف شده‌اند و فقط در این صفحه قابل مشاهده‌اند.')}<div class="grid three">${kpi('تعداد فاکتور',num(unique(ex.map(r=>r.invoice||r.date+'-'+r.supplier)).length))}${kpi('تعداد فروشنده',num(unique(ex.map(r=>r.supplier)).length))}${kpi('مجموع خرید',money(total))}</div><div class="grid two" style="margin-top:14px"><div class="panel"><h3>مبلغ خرید به تفکیک فروشنده</h3><div class="chart-wrap"><canvas id="exBar"></canvas></div></div><div class="panel"><h3>روند ماهانه خریدهای استثنا</h3><div class="chart-wrap"><canvas id="exLine"></canvas></div></div></div><div class="panel" style="margin-top:14px"><h3>خلاصه عملکرد فروشندگان استثنا</h3>${sellerTable(by,ex,'amount')}</div>`;
@@ -362,7 +439,9 @@ document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLower
 $('#refreshBtn').onclick=()=>{toast('در حال تازه‌سازی…');init()};
 $('#menuBtn').onclick=()=>$('#sidebar').classList.toggle('open');
 $('#drawerClose').onclick=closeOverlays;$('#modalClose').onclick=closeOverlays;$('#drawer').onclick=e=>{if(e.target.id==='drawer')closeOverlays()};$('#modal').onclick=e=>{if(e.target.id==='modal')closeOverlays()};
-init();
+$('#loginForm').onsubmit=e=>{e.preventDefault();const u=$('#loginUser').value.trim(),p=$('#loginPass').value;if(u.toLowerCase()==='admin'&&p==='1404'){sessionStorage.setItem('ramoos-auth','1');$('#loginScreen').style.display='none';$('#mainApp').style.display='flex';init()}else{$('#loginError').textContent='نام کاربری یا رمز عبور صحیح نیست.'}};
+if(sessionStorage.getItem('ramoos-auth')==='1'){$('#loginScreen').style.display='none';$('#mainApp').style.display='flex';init()}else{$('#mainApp').style.display='none'}
+
 </script>
 </body>
 </html>
