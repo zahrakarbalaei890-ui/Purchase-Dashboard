@@ -121,6 +121,71 @@ tr.clickable{cursor:pointer}tr.clickable:hover{background:#f7fcfc}
 .dashboard-periods{margin:0 0 14px;display:inline-flex}.dash-topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
 @media(max-width:760px){.login-screen{grid-template-columns:1fr}.login-brand{display:none}.login-left{padding:18px}.login-card{padding:25px}}
 
+
+/* Dashboard V8 refinements */
+.topbar-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.topbar-actions .btn{padding:8px 11px;font-size:10px}
+.kpis.kpis-main{grid-template-columns:repeat(5,minmax(0,1fr))}
+.kpis-main .kpi{padding:20px 18px;min-height:116px}
+.kpis-main .kpi .label{font-size:11px}
+.kpis-main .kpi .value{font-size:27px;line-height:1.35}
+.kpis-main .kpi .sub{font-size:10px}
+.hero.dashboard-hero{padding:24px 26px}
+.hero.dashboard-hero h2{font-size:25px}
+.hero.dashboard-hero .hero-row{align-items:flex-start}
+.hero-actions{display:flex;gap:8px;flex-wrap:wrap}
+.trend-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.trend-periods{display:flex;gap:5px;background:#f6f8fb;border:1px solid var(--line);padding:4px;border-radius:11px}
+.trend-periods button{border:0;background:transparent;color:var(--muted);font-size:9px;font-weight:800;padding:7px 10px;border-radius:8px}
+.trend-periods button.active{background:#172b45;color:#fff}
+.dashboard-section{margin-top:22px}
+.dashboard-section .section-title{margin:0 0 10px}
+.category-board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.category-card{border:1px solid var(--line);border-radius:15px;background:linear-gradient(180deg,#fff,#fbfcfe);padding:12px}
+.category-card-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px;padding-bottom:8px;border-bottom:1px solid #eef1f5}
+.category-card-head b{font-size:12px}
+.category-card-head span{font-size:9px;color:var(--muted)}
+.rank-block{margin-top:8px}
+.rank-block-title{font-size:9px;color:var(--muted);font-weight:800;margin-bottom:5px}
+.rank-row{display:grid;grid-template-columns:20px 1fr auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px dashed #edf0f4;font-size:10px}
+.rank-row:last-child{border-bottom:0}
+.rank-no{width:20px;height:20px;border-radius:7px;background:#eef4fb;display:grid;place-items:center;color:#42617e;font-size:9px;font-weight:900}
+.rank-row .rank-name{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+.rank-row .rank-val{font-weight:900;white-space:nowrap}
+.supplier-radar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.supplier-card{border:1px solid var(--line);border-radius:15px;padding:13px;background:#fff;cursor:pointer;transition:.15s}
+.supplier-card:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(24,39,75,.08);border-color:#cfe5e4}
+.supplier-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.supplier-top b{font-size:11px;line-height:1.7}
+.supplier-card .supplier-rank{width:27px;height:27px;border-radius:9px;background:#edf4ff;color:#245db8;display:grid;place-items:center;font-size:10px;font-weight:900;flex:0 0 auto}
+.supplier-metrics{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.supplier-metric{background:#f7f9fc;border-radius:10px;padding:8px}
+.supplier-metric small{display:block;color:var(--muted);font-size:8px;margin-bottom:3px}
+.supplier-metric b{font-size:10px}
+.alert-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.alert-list{display:grid;gap:7px}
+.alert-item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.alert-item .alert-main{min-width:0}
+.alert-item .alert-main b{display:block;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.alert-item .alert-main span{display:block;color:var(--muted);font-size:9px;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.alert-value{font-weight:900;font-size:10px;white-space:nowrap}
+.alert-value.up{color:#c83c4e}.alert-value.down{color:#0c946a}
+.dashboard-share{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.share-list{display:grid;gap:7px}
+.share-row{display:grid;grid-template-columns:25px 1fr auto;align-items:center;gap:8px;padding:8px;border-radius:11px;background:#f8fafc}
+.share-row .bar{height:7px;border-radius:999px;background:#e8edf3;overflow:hidden;margin-top:4px}
+.share-row .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px}
+@media(max-width:1100px){
+ .kpis.kpis-main{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .category-board,.supplier-radar{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+ .kpis.kpis-main{grid-template-columns:1fr 1fr}
+ .category-board,.supplier-radar,.alert-grid,.dashboard-share{grid-template-columns:1fr}
+ .topbar-actions{width:100%;justify-content:flex-start}
+}
+@media(max-width:430px){.kpis.kpis-main{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -165,7 +230,15 @@ tr.clickable{cursor:pointer}tr.clickable:hover{background:#f7fcfc}
   <div class="top-left"><button class="icon-btn mobile-menu" id="menuBtn">☰</button><div class="periods" id="globalPeriods">
    <button data-period="3">۳ ماه</button><button data-period="6">۶ ماه</button><button data-period="12" class="active">۱۲ ماه</button><button data-period="all">کل دوره</button>
   </div></div>
-  <div class="top-left"><input id="globalSearch" class="search-global" placeholder="جستجوی سریع کالا، فروشنده یا فاکتور…  (Ctrl + K)"><button class="icon-btn" id="refreshBtn">↻</button></div>
+  <div class="top-left" style="flex-wrap:wrap;justify-content:flex-end">
+   <div class="topbar-actions">
+    <button class="btn blue" onclick="go('upload')">⇧ آپلود Excel</button>
+    <button class="btn" onclick="exportCurrent()">⇩ خروجی CSV</button>
+    <button class="btn" onclick="uploadedData?downloadUpdatedJSON():toast('ابتدا یک فایل Excel جدید آپلود کن')">JSON</button>
+   </div>
+   <input id="globalSearch" class="search-global" placeholder="جستجوی سریع کالا، فروشنده یا فاکتور…  (Ctrl + K)">
+   <button class="icon-btn" id="refreshBtn">↻</button>
+  </div>
  </div>
  <div id="view"></div>
 </main>
@@ -202,43 +275,136 @@ function render(){destroyCharts();$('#sidebar').classList.remove('open');const f
 function head(title,sub='',actions=''){return `<div class="page-head"><div><h1>${title}</h1>${sub?`<p>${sub}</p>`:''}</div><div class="actions">${actions}</div></div>`}
 function kpi(label,value,sub=''){return `<div class="kpi"><div class="label">${label}</div><div class="value">${value}</div>${sub?`<div class="sub">${sub}</div>`:''}</div>`}
 function renderDashboard(){
- const rs=filteredRows(), total=rs.reduce((s,r)=>s+r.amount,0), qty=rs.reduce((s,r)=>s+r.qty,0), inv=unique(rs.map(r=>r.invoice||`${r.date}-${r.supplier}`)).length, it=unique(rs.map(r=>r.itemCode||r.item)).length, sp=unique(rs.map(r=>r.supplier)).length;
+ const rs=filteredRows(), total=rs.reduce((s,r)=>s+r.amount,0), qty=rs.reduce((s,r)=>s+r.qty,0);
+ const inv=unique(rs.map(r=>r.invoice||`${r.date}-${r.supplier}`)).length;
+ const it=unique(rs.map(r=>r.itemCode||r.item)).length, sp=unique(rs.map(r=>r.supplier)).length;
  const months=unique(rs.map(r=>`${r.year}/${String(r.month).padStart(2,'0')}`)).sort();
- const monthMap=new Map(months.map(m=>[m,0]));rs.forEach(r=>monthMap.set(`${r.year}/${String(r.month).padStart(2,'0')}`,(monthMap.get(`${r.year}/${String(r.month).padStart(2,'0')}`)||0)+r.amount));
- const catsum=groupSum(rs,'category'), topItems=groupSum(rs,'item'), topQty=groupSum(rs,'item','qty');
+ const monthMap=new Map(months.map(m=>[m,0]));
+ rs.forEach(r=>{const k=`${r.year}/${String(r.month).padStart(2,'0')}`;monthMap.set(k,(monthMap.get(k)||0)+r.amount)});
+ const catsum=groupSum(rs,'category'), topQty=groupSum(rs,'item','qty'), topAmount=groupSum(rs,'item','amount');
  const topSupAmount=groupSum(rs,'supplier'), topSupCount=groupCount(rs,'supplier');
- const alerts=priceAlerts(rs).slice(0,8);
+ const nearAlerts=priceAlerts(rs).filter(x=>x.gap>0&&x.gap<=60).slice(0,8);
+ const sellerChanges=nearAlerts.reduce((m,x)=>{
+   let a=m.get(x.supplier); if(!a)a={supplier:x.supplier,changes:[],up:0,down:0};
+   a.changes.push(x); x.change>0?a.up++:a.down++; m.set(x.supplier,a); return m;
+ },new Map());
+ const changeSellers=[...sellerChanges.values()].sort((a,b)=>Math.max(...b.changes.map(x=>Math.abs(x.change)))-Math.max(...a.changes.map(x=>Math.abs(x.change)))).slice(0,6);
+
  $('#view').innerHTML=`
- <div class="dash-topline"><div class="periods dashboard-periods" id="dashPeriods"><button data-period="3">۳ ماهه</button><button data-period="6">۶ ماهه</button><button data-period="12">۱۲ ماهه</button><button data-period="all">کل دوره</button></div><span class="badge blue">بازه فعال: ${periodLabel(state.period)}</span></div>
- ${head('داشبورد مدیریت',`بازه فعال: ${periodLabel(state.period)}  |  آخرین فاکتور: ${DATA.meta.lastInvoiceDate}`)}
- <div class="hero"><div class="hero-row"><div><h2>مرکز فرمان خرید</h2><p>همان منطق داشبورد Excel، این بار با Drill-down، نمودارهای تعاملی، شناسنامه کالا، DNA فروشنده و تحلیل سناریو.</p></div><div class="actions"><button class="btn" onclick="go('whatif')">WHAT-IF</button><button class="btn" onclick="go('supplier-dna')">DNA فروشندگان</button></div></div><div class="hero-stat"><div><b>${money(total)}</b><span>مجموع خرید</span></div><div><b>${num(qty)}</b><span>مجموع مقدار</span></div><div><b>${num(inv)}</b><span>تعداد فاکتور</span></div><div><b>${num(it)}</b><span>تعداد کالا</span></div><div><b>${num(sp)}</b><span>فروشنده فعال</span></div></div></div>
- <div class="grid kpis" style="margin-top:14px">${kpi('مجموع خرید',money(total),'مبلغ کامل با واحد ریال')}${kpi('میانگین فاکتور',money(inv?total/inv:0),'متوسط مبلغ هر فاکتور')}${kpi('پرمصرف‌ترین کالا',esc(topQty[0]?.[0]||'—'),topQty[0]?num(topQty[0][1])+' واحد':'' )}${kpi('بیشترین سهم فروشنده',esc(topSupAmount[0]?.[0]||'—'),topSupAmount[0]?money(topSupAmount[0][1]):'')}</div>
- <div class="grid two" style="margin-top:14px">
-  <div class="panel"><h3>روند خرید ماهانه</h3><div class="desc">مبلغ خرید واقعی در بازه انتخابی</div><div class="chart-wrap"><canvas id="trendChart"></canvas></div></div>
-  <div class="panel"><h3>سهم هزینه به تفکیک دسته‌بندی</h3><div class="desc">برای ورود به جزئیات، روی بخش نمودار کلیک کن</div><div class="chart-wrap"><canvas id="catChart"></canvas></div></div>
+ <div class="page-head" style="margin-bottom:12px">
+   <div><h1>داشبورد مدیریت خرید</h1><p>نمای زنده خریدها در بازه <b>${periodLabel(state.period)}</b>؛ همه اعداد از داده‌های فعلی داشبورد محاسبه می‌شوند.</p></div>
+   <div class="actions">
+    <button class="btn primary" onclick="go('upload')">⇧ آپلود فایل Excel</button>
+    <button class="btn" onclick="exportCurrent()">⇩ خروجی گزارش</button>
+   </div>
  </div>
- <div class="section-title"><h2>پرمصرف‌ترین و پرهزینه‌ترین کالاها به تفکیک دسته‌بندی</h2><span>الگوی اصلی داشبورد Excel</span></div>
- <div class="grid two"><div class="panel">${topByCategoryTable(rs,'qty')}</div><div class="panel">${topByCategoryTable(rs,'amount')}</div></div>
- <div class="section-title"><h2>تحلیل فروشندگان</h2><span>روی هر ردیف کلیک کن</span></div>
- <div class="grid two"><div class="panel"><h3>بیشترین مبلغ خرید</h3>${sellerTable(topSupAmount.slice(0,10),rs,'amount')}</div><div class="panel"><h3>بیشترین تعداد خرید</h3>${sellerTable(topSupCount.slice(0,10),rs,'count')}</div></div>
- <div class="section-title"><h2>هشدارهای فاصله و تغییر نرخ</h2><span>موارد مهم برای پیگیری</span></div>
- <div class="grid two"><div class="panel">${alertsTable(alerts)}</div><div class="panel"><h3>فروشندگان با بیشترین تغییر قیمت</h3>${changeTable(priceAlerts(rs).slice(0,10))}</div></div>
- <div class="section-title"><h2>سهم هزینه</h2><span>قابل Drill-down</span></div>
- <div class="panel">${shareTable(catsum)}</div>`;
- setTimeout(()=>{makeChart('trendChart','line',months.map(m=>m.replace('/','/')), [{label:'مبلغ خرید',data:months.map(m=>monthMap.get(m)||0),borderColor:'#19b5ae',backgroundColor:'rgba(25,181,174,.12)',fill:true,tension:.35,pointRadius:3}],{plugins:{tooltip:{callbacks:{label:c=>money(c.raw)}}}});makeChart('catChart','doughnut',catsum.slice(0,10).map(x=>x[0]),[{data:catsum.slice(0,10).map(x=>x[1]),backgroundColor:['#19b5ae','#3b82f6','#7c5cff','#f59e0b','#ef6472','#14b8a6','#64748b','#8b5cf6','#22c55e','#e11d48']}]);},0);
+ <div class="hero dashboard-hero">
+   <div class="hero-row">
+    <div><h2>مرکز فرمان خرید</h2><p>از همین‌جا روند خرید، دسته‌ها، کالاهای کلیدی، فروشندگان و هشدارهای نرخ را یکجا ببین.</p></div>
+    <div class="hero-actions"><button class="btn" onclick="go('whatif')">WHAT-IF</button><button class="btn" onclick="go('supplier-dna')">DNA فروشندگان</button><button class="btn" onclick="go('items')">شناسنامه کالا</button></div>
+   </div>
+ </div>
+ <div class="grid kpis kpis-main" style="margin-top:14px">
+  ${kpi('مجموع خرید',money(total),'بازه فعال')}
+  ${kpi('مجموع مقدار',num(qty),'واحد خرید')}
+  ${kpi('تعداد فاکتور',num(inv),'فاکتور یکتا')}
+  ${kpi('تعداد کالا',num(it),'کالای یکتا')}
+  ${kpi('فروشنده فعال',num(sp),'فروشنده یکتا')}
+ </div>
+
+ <div class="dashboard-section">
+  <div class="section-title"><h2>روند خرید ماهانه</h2><span>با انتخاب بازه، نمودار همان لحظه تغییر می‌کند</span></div>
+  <div class="panel">
+   <div class="trend-toolbar">
+    <div><h3 style="margin:0">روند مبلغ خرید</h3><div class="desc" style="margin:4px 0 0">برای تحلیل کوتاه‌مدت یا کل سابقه، بازه را انتخاب کن.</div></div>
+    <div class="trend-periods" id="trendPeriods">
+      <button data-period="3">۳ ماهه</button><button data-period="6">۶ ماهه</button><button data-period="12">۱۲ ماهه</button><button data-period="all">کل دوره</button>
+    </div>
+   </div>
+   <div class="chart-wrap" style="height:320px"><canvas id="trendChart"></canvas></div>
+  </div>
+ </div>
+
+ <div class="dashboard-section">
+  <div class="section-title"><h2>ترکیب خرید</h2><span>سهم هر دسته از کل مبلغ</span></div>
+  <div class="panel"><div class="chart-wrap sm"><canvas id="catChart"></canvas></div></div>
+ </div>
+
+ <div class="dashboard-section">
+  <div class="section-title"><h2>کالاهای کلیدی هر دسته</h2><span>همان منطق «پرمصرف‌ترین / پرهزینه‌ترین» Excel، بدون جدول عریض</span></div>
+  <div class="panel"><div class="category-board">${categoryHighlights(rs)}</div></div>
+ </div>
+
+ <div class="dashboard-section">
+  <div class="section-title"><h2>رادار فروشندگان</h2><span>پررنگ‌ترین فروشندگان این بازه؛ با کلیک پروفایل باز می‌شود</span></div>
+  <div class="supplier-radar">${supplierCards(topSupAmount,topSupCount,rs)}</div>
+ </div>
+
+ <div class="dashboard-section">
+  <div class="section-title"><h2>هشدارهای هوشمند نرخ</h2><span>فقط تغییرات بین خریدهای نزدیک؛ حداکثر فاصله ۲ ماه</span></div>
+  <div class="alert-grid">
+   <div class="panel"><h3>تغییر نرخ در خریدهای نزدیک</h3><div class="desc">برای جلوگیری از هشدارهای بی‌ربط، فقط فاصله‌های حداکثر ۶۰ روز نمایش داده می‌شوند.</div>${alertsCards(nearAlerts)}</div>
+   <div class="panel"><h3>فروشندگان با بیشترین تغییر نرخ</h3><div class="desc">بر اساس بیشترین تغییر ثبت‌شده در همین بازه کوتاه</div>${sellerChangeCards(changeSellers)}</div>
+  </div>
+ </div>
+
+ <div class="dashboard-section">
+  <div class="section-title"><h2>سهم هزینه دسته‌ها</h2><span>کلیک روی هر دسته → دفتر خرید همان دسته</span></div>
+  <div class="panel">${shareVisual(catsum)}</div>
+ </div>`;
+
+ setTimeout(()=>{
+   makeChart('trendChart','line',months.map(m=>m.replace('/','/')),[
+    {label:'مبلغ خرید',data:months.map(m=>monthMap.get(m)||0),borderColor:'#19b5ae',backgroundColor:'rgba(25,181,174,.12)',fill:true,tension:.35,pointRadius:3,pointHoverRadius:6}
+   ],{plugins:{tooltip:{callbacks:{label:c=>money(c.raw)}}},scales:{y:{ticks:{callback:v=>moneyShort(v),font:{family:'Tahoma',size:9}}}}});
+   const vals=catsum.slice(0,10).map(x=>x[1]), labels=catsum.slice(0,10).map(x=>x[0]), totalCat=vals.reduce((a,b)=>a+b,0);
+   const pctPlugin={id:'dashboardDonutPct',afterDatasetsDraw(chart){
+     if(chart.config.type!=='doughnut')return;
+     const {ctx}=chart;const meta=chart.getDatasetMeta(0);ctx.save();ctx.font='700 10px Tahoma';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';
+     meta.data.forEach((arc,i)=>{const v=vals[i]||0;if(!v||v/totalCat<.035)return;const p=arc.getCenterPoint();ctx.fillText(((v/totalCat)*100).toFixed(0)+'٪',p.x,p.y)});
+     ctx.restore();
+   }};
+   makeChart('catChart','doughnut',labels,[{data:vals,backgroundColor:['#19b5ae','#3b82f6','#7c5cff','#f59e0b','#ef6472','#14b8a6','#64748b','#8b5cf6','#22c55e','#e11d48'],borderWidth:2}],{cutout:'62%',plugins:{legend:{position:'bottom',labels:{font:{family:'Tahoma',size:9},boxWidth:12,padding:10,generateLabels(chart){const ds=chart.data.datasets[0].data;return chart.data.labels.map((l,i)=>({text:`${l}  ${((ds[i]/totalCat)*100).toFixed(1)}٪`,fillStyle:ds[i]?chart.data.datasets[0].backgroundColor[i]:'#ddd',strokeStyle:'transparent',index:i}))}}},tooltip:{callbacks:{label:c=>`${c.label}: ${money(c.raw)} | ${((c.raw/totalCat)*100).toFixed(1)}٪`}}},plugins:[pctPlugin]});
+   $$('#trendPeriods button').forEach(b=>{b.classList.toggle('active',b.dataset.period===state.period);b.onclick=()=>{state.period=b.dataset.period;render()}});
+ },0);
+}
+function categoryHighlights(rs){
+ const catsList=cats();
+ return catsList.map(cat=>{
+   const rr=rs.filter(r=>r.category===cat);
+   const q=groupSum(rr,'item','qty').slice(0,3), a=groupSum(rr,'item','amount').slice(0,3);
+   if(!q.length&&!a.length)return '';
+   const findUnit=name=>rr.find(r=>r.item===name)?.unit||'';
+   const list=(arr,mode)=>arr.map((x,i)=>`<div class="rank-row" onclick="openItem('${attr(x[0])}')"><span class="rank-no">${i+1}</span><span class="rank-name" title="${esc(x[0])}">${esc(x[0])}</span><span class="rank-val">${mode==='qty'?num(x[1])+' '+esc(findUnit(x[0])):money(x[1])}</span></div>`).join('');
+   return `<div class="category-card"><div class="category-card-head"><b>${esc(cat)}</b><span>${num(rr.reduce((s,r)=>s+r.amount,0))} ریال</span></div>
+    <div class="rank-block"><div class="rank-block-title">پرمصرف‌ترین</div>${list(q,'qty')||'<div class="muted" style="font-size:9px">داده‌ای نیست</div>'}</div>
+    <div class="rank-block"><div class="rank-block-title">پرهزینه‌ترین</div>${list(a,'amount')||'<div class="muted" style="font-size:9px">داده‌ای نیست</div>'}</div>
+   </div>`;
+ }).join('');
+}
+function supplierCards(topAmount,topCount,rs){
+ const names=unique([...topAmount.slice(0,6).map(x=>x[0]),...topCount.slice(0,6).map(x=>x[0])]).slice(0,8);
+ const total=rs.reduce((s,r)=>s+r.amount,0);
+ return names.map((name,i)=>{
+   const amount=groupSum(rs.filter(r=>r.supplier===name),'supplier')[0]?.[1]||0;
+   const count=rs.filter(r=>r.supplier===name).length, share=total?amount/total:0;
+   return `<div class="supplier-card" onclick="openSupplier('${attr(name)}')"><div class="supplier-top"><b>${esc(name)}</b><span class="supplier-rank">${i+1}</span></div>
+    <div class="supplier-metrics"><div class="supplier-metric"><small>مبلغ خرید</small><b>${money(amount)}</b></div><div class="supplier-metric"><small>تعداد خرید</small><b>${num(count)} ردیف</b></div></div>
+    <div style="margin-top:9px"><div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted)"><span>سهم از خرید</span><b>${pct(share)}</b></div><div class="progress" style="margin-top:5px"><i style="width:${Math.min(100,share*100*4)}%"></i></div></div>
+   </div>`;
+ }).join('');
+}
+function alertsCards(a){
+ return `<div class="alert-list">${a.length?a.map(x=>`<div class="alert-item clickable" onclick="openItem('${attr(x.item)}')"><div class="alert-main"><b>${esc(x.item)}</b><span>${esc(x.supplier)} · فاصله ${num(x.gap)} روز · ${money(x.old)} → ${money(x.new)}</span></div><div class="alert-value ${x.change>0?'up':'down'}">${x.change>0?'▲':'▼'} ${pct(Math.abs(x.change))}</div></div>`).join(''):'<div class="empty">در خریدهای با فاصله حداکثر ۶۰ روز، موردی پیدا نشد.</div>'}</div>`;
+}
+function sellerChangeCards(a){
+ return `<div class="alert-list">${a.length?a.map((x,i)=>{const max=x.changes.reduce((m,v)=>Math.max(m,Math.abs(v.change)),0);return `<div class="alert-item clickable" onclick="openSupplier('${attr(x.supplier)}')"><div class="alert-main"><b>${i+1}. ${esc(x.supplier)}</b><span>${num(x.changes.length)} تغییر نرخ نزدیک · ${x.up} افزایش · ${x.down} کاهش</span></div><div class="alert-value ${x.changes.find(v=>v.change>0)?.change>0?'up':'down'}">${pct(max)}</div></div>`}).join(''):'<div class="empty">در این بازه تغییر نرخ نزدیک ثبت نشده.</div>'}</div>`;
+}
+function shareVisual(g){
+ const total=g.reduce((s,x)=>s+x[1],0);
+ return `<div class="dashboard-share"><div class="share-list">${g.map((x,i)=>{const p=total?x[1]/total:0;return `<div class="share-row clickable" onclick="state.cat=${JSON.stringify(x[0])};go('purchases')"><span class="rank-no">${i+1}</span><div><b style="font-size:10px">${esc(x[0])}</b><div class="bar"><i style="width:${p*100}%"></i></div></div><b style="font-size:10px;white-space:nowrap">${pct(p)}</b></div>`}).join('')}</div><div class="panel" style="box-shadow:none;background:#f8fafc"><h3>مجموع</h3><div style="font-size:24px;font-weight:900;margin-top:14px">${money(total)}</div><p class="muted" style="font-size:10px;line-height:2">برای بررسی ریز خریدهای هر دسته، روی نام آن کلیک کن.</p></div></div>`;
 }
 function periodLabel(p){if(p==='all')return 'کل دوره';return `${p} ماه اخیر`}
-function topByCategoryTable(rs,mode){
- let html=`<h3>${mode==='qty'?'پرمصرف‌ترین کالاها':'پرهزینه‌ترین کالاها'}</h3><div class="desc">${mode==='qty'?'بر اساس مقدار خرید':'بر اساس مبلغ خرید'}؛ سه کالای اول هر دسته</div><div class="table-wrap"><table><thead><tr><th>دسته</th><th>کالا</th><th>واحد</th><th>${mode==='qty'?'مقدار':'مبلغ'}</th><th>جزئیات</th></tr></thead><tbody>`;
- catsumLoop: for(const cat of cats()){const rr=rs.filter(r=>r.category===cat);const g=groupSum(rr,'item',mode==='qty'?'qty':'amount').slice(0,3);g.forEach(([item,val])=>{const one=rr.find(r=>r.item===item);html+=`<tr class="clickable" onclick="openItem('${attr(item)}')"><td>${esc(cat)}</td><td class="item-title">${esc(item)}</td><td>${esc(one?.unit||'')}</td><td class="money">${mode==='qty'?num(val):money(val)}</td><td><span class="badge blue">شناسنامه ←</span></td></tr>`})}
- return html+'</tbody></table></div>';
-}
-function sellerTable(g,rs,mode){let h='<div class="table-wrap"><table><thead><tr><th>رتبه</th><th>فروشنده</th><th>'+ (mode==='amount'?'مبلغ خرید':'تعداد خرید')+'</th><th>سهم</th></tr></thead><tbody>';const total=rs.reduce((s,r)=>s+r.amount,0);g.forEach(([name,val],i)=>{const amount=groupSum(rs.filter(r=>r.supplier===name),'supplier')[0]?.[1]||0;h+=`<tr class="clickable" onclick="openSupplier('${attr(name)}')"><td>${i+1}</td><td class="item-title">${esc(name)}</td><td>${mode==='amount'?money(val):num(val)}</td><td><div class="progress"><i style="width:${Math.min(100,amount/total*100*4)}%"></i></div> ${pct(amount/total)}</td></tr>`});return h+'</tbody></table></div>'}
-function shareTable(g){const total=g.reduce((s,x)=>s+x[1],0);return `<div class="table-wrap"><table><thead><tr><th>رتبه</th><th>دسته</th><th>مبلغ</th><th>سهم</th></tr></thead><tbody>${g.map((x,i)=>`<tr class="clickable" onclick="state.cat=${JSON.stringify(x[0])};go('purchases')"><td>${i+1}</td><td>${esc(x[0])}</td><td class="money">${money(x[1])}</td><td>${pct(x[1]/total)}</td></tr>`).join('')}</tbody></table></div>`}
-function priceAlerts(rs){const map=new Map();rs.forEach(r=>{const k=(r.itemCode||r.item)+'|'+r.supplierCode;let a=map.get(k);if(!a){a={item:r.item,supplier:r.supplier,history:[]};map.set(k,a)}a.history.push(r)});const out=[];map.forEach(a=>{a.history.sort((x,y)=>idx(x)-idx(y)||String(x.date).localeCompare(String(y.date)));for(let i=1;i<a.history.length;i++){const p=a.history[i-1],n=a.history[i];if(p.unitPrice&&n.unitPrice&&p.unitPrice!==n.unitPrice){out.push({item:a.item,supplier:a.supplier,old:p.unitPrice,new:n.unitPrice,change:(n.unitPrice-p.unitPrice)/p.unitPrice,date:n.date,gap:dateGap(p,n)})}}});return out.sort((a,b)=>Math.abs(b.change)-Math.abs(a.change))}
-function dateGap(a,b){const daysA=(a.year*365)+(a.month-1)*30+a.day,daysB=(b.year*365)+(b.month-1)*30+b.day;return daysB-daysA}
-function alertsTable(a){return `<div class="table-wrap"><table><thead><tr><th>کالا</th><th>فروشنده</th><th>تغییر نرخ</th><th>فاصله</th></tr></thead><tbody>${a.length?a.map(x=>`<tr class="clickable" onclick="openItem('${attr(x.item)}')"><td>${esc(x.item)}</td><td>${esc(x.supplier)}</td><td class="${x.change>0?'price-up':'price-down'}">${x.change>0?'▲':'▼'} ${pct(Math.abs(x.change))}</td><td>${num(x.gap)} روز</td></tr>`).join(''):'<tr><td colspan="4" class="empty">موردی در این بازه پیدا نشد.</td></tr>'}</tbody></table></div>`}
-function changeTable(a){return `<div class="table-wrap"><table><thead><tr><th>فروشنده</th><th>کالا</th><th>قیمت قبلی</th><th>قیمت جدید</th><th>تغییر</th></tr></thead><tbody>${a.map(x=>`<tr><td>${esc(x.supplier)}</td><td>${esc(x.item)}</td><td class="money">${money(x.old)}</td><td class="money">${money(x.new)}</td><td class="${x.change>0?'price-up':'price-down'}">${pct(x.change)}</td></tr>`).join('')}</tbody></table></div>`}
 function renderPurchases(){
  let rs=filteredRows();const total=rs.length;
  $('#view').innerHTML=`${head('دفتر خریدها','ریز تمام خریدهای واقعی؛ مبلغ و نرخ همیشه کامل و با واحد ریال نمایش داده می‌شوند.',`<button class="btn primary" onclick="exportCurrent()">خروجی CSV</button>`)}
