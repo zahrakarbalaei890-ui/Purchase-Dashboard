@@ -267,6 +267,33 @@ function inPeriod(r,p=state.period){const [a,b]=periodBounds(p);return idx(r)>=a
 function filteredRows(extra={}){let p=extra.period||state.period,cat=extra.cat??state.cat,q=extra.query??state.query,sup=extra.supplier??state.supplier;return rows.filter(r=>inPeriod(r,p)&&(!cat||cat==='همه'||r.category===cat)&&(!sup||sup==='همه'||r.supplier===sup)&&(!q||[r.item,r.supplier,r.invoice,r.itemCode,r.supplierCode,r.category].some(v=>String(v??'').toLowerCase().includes(String(q).toLowerCase()))))}
 function groupSum(rs,key,val='amount'){const m=new Map();rs.forEach(r=>m.set(r[key],(m.get(r[key])||0)+Number(r[val]||0)));return [...m.entries()].sort((a,b)=>b[1]-a[1])}
 function groupCount(rs,key){const m=new Map();rs.forEach(r=>m.set(r[key],(m.get(r[key])||0)+1));return [...m.entries()].sort((a,b)=>b[1]-a[1])}
+function jalaliDayNumber(r){
+ const y=Number(r.year)||0, m=Number(r.month)||1, d=Number(r.day)||1;
+ let days=y*365 + Math.floor((y-1)/4);
+ for(let i=1;i<m;i++) days += i<=6?31:30;
+ return days+d;
+}
+function dateGap(a,b){return Math.abs(jalaliDayNumber(a)-jalaliDayNumber(b));}
+function priceAlerts(rs){
+ const groups=new Map();
+ rs.forEach(r=>{
+   const key=String(r.itemCode||r.item||'')+'||'+String(r.supplierCode||r.supplier||'');
+   if(!groups.has(key)) groups.set(key,[]);
+   if(Number(r.unitPrice)>0) groups.get(key).push(r);
+ });
+ const out=[];
+ groups.forEach(a=>{
+   a.sort((x,y)=>jalaliDayNumber(x)-jalaliDayNumber(y));
+   for(let i=1;i<a.length;i++){
+     const old=a[i-1], cur=a[i];
+     if(!old.unitPrice||!cur.unitPrice) continue;
+     const gap=dateGap(old,cur);
+     const change=Number(cur.unitPrice)/Number(old.unitPrice)-1;
+     if(Number.isFinite(change) && change!==0) out.push({item:cur.item,itemCode:cur.itemCode,supplier:cur.supplier,supplierCode:cur.supplierCode,old:Number(old.unitPrice),new:Number(cur.unitPrice),change,gap,oldDate:old.date,newDate:cur.date,category:cur.category});
+   }
+ });
+ return out.sort((a,b)=>Math.abs(b.change)-Math.abs(a.change));
+}
 function unique(arr){return [...new Set(arr)]}
 function cats(){return unique(rows.map(r=>r.category)).sort((a,b)=>a.localeCompare(b,'fa'))}
 function suppliers(){return unique(rows.map(r=>r.supplier)).sort((a,b)=>a.localeCompare(b,'fa'))}
