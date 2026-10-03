@@ -7,7 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#06060f;--bg2:#0c0c1d;--card:rgba(15,15,35,.75);--glass:rgba(255,255,255,.03);--border:rgba(255,255,255,.07);--a1:#6c5ce7;--a2:#00cec9;--a3:#fd79a8;--a4:#fdcb6e;--a5:#55efc4;--a6:#74b9ff;--t1:#e8e8f0;--t2:#8888a8;--t3:#55556a;--r:16px;--rs:10px;--rx:6px;--sb:260px}
+:root{--bg:#06060f;--card:rgba(15,15,35,.75);--glass:rgba(255,255,255,.03);--border:rgba(255,255,255,.07);--a1:#6c5ce7;--a2:#00cec9;--a3:#fd79a8;--a4:#fdcb6e;--a5:#55efc4;--a6:#74b9ff;--t1:#e8e8f0;--t2:#8888a8;--t3:#55556a;--r:16px;--rs:10px;--rx:6px;--sb:260px}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden;line-height:1.7;font-size:14px}
 ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--a1);border-radius:10px}
@@ -18,13 +18,9 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--t1);min
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 .anim{animation:fadeUp .45s ease-out both}
-
-/* LOADER */
 #loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .4s}
 #loader.h{opacity:0;pointer-events:none}
 .spin{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--a1);border-radius:50%;animation:spin .7s linear infinite}
-
-/* UPLOAD */
 #uploadScr{position:fixed;inset:0;z-index:9998;background:linear-gradient(135deg,#0c0c1d,#1a0a2e 50%,#0a1628);display:none;align-items:center;justify-content:center}
 #uploadScr.show{display:flex}
 .up-box{background:var(--card);backdrop-filter:blur(40px);border:1px solid var(--border);border-radius:24px;padding:48px;max-width:480px;width:92%;text-align:center}
@@ -39,8 +35,6 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--t1);min
 .btn-outline:hover{border-color:var(--a1);color:var(--a1);box-shadow:none;transform:none}
 .btn-danger{background:linear-gradient(135deg,#e84393,#fd79a8)}
 .btn-success{background:linear-gradient(135deg,#00b894,#55efc4);color:#000}
-
-/* APP LAYOUT */
 #app{display:none;position:relative;z-index:1;min-height:100vh}
 #app.show{display:flex}
 .sidebar{width:var(--sb);background:rgba(10,10,25,.88);backdrop-filter:blur(30px);border-left:1px solid var(--border);position:fixed;top:0;right:0;bottom:0;z-index:100;display:flex;flex-direction:column;transition:transform .3s;overflow-y:auto}
@@ -61,15 +55,11 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--t1);min
 .hdr-actions{display:flex;gap:8px;align-items:center}
 .menu-btn{display:none;width:36px;height:36px;background:var(--glass);border:1px solid var(--border);border-radius:var(--rx);align-items:center;justify-content:center;cursor:pointer;color:var(--t1);font-size:1rem}
 .content{padding:22px;flex:1}
-
-/* CARDS */
 .card{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r);box-shadow:0 8px 32px rgba(0,0,0,.25);overflow:hidden}
 .card-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .card-head h3{font-size:.88rem;font-weight:700;display:flex;align-items:center;gap:8px}
 .card-body{padding:20px}
 .card-body.np{padding:0}
-
-/* KPI */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:20px}
 .kpi{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r);padding:18px;position:relative;overflow:hidden;transition:all .3s}
 .kpi:hover{transform:translateY(-3px);box-shadow:0 0 30px rgba(108,92,231,.12)}
@@ -89,8 +79,6 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--t1);min
 .kpi:nth-child(5) .kpi-v{background:linear-gradient(135deg,#74b9ff,#0984e3);-webkit-background-clip:text}
 .kpi:nth-child(6) .kpi-v{background:linear-gradient(135deg,#55efc4,#00b894);-webkit-background-clip:text}
 .kpi-sub{font-size:.65rem;color:var(--t2);margin-top:3px}
-
-/* FILTERS */
 .filters{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
 .fg{display:flex;flex-direction:column;gap:4px;min-width:140px;flex:1}
 .fg label{font-size:.65rem;color:var(--t3);font-weight:600}
@@ -103,15 +91,10 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--t1);min
 .g-toggle button.on-all{background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff}
 .g-toggle button.on-goods{background:linear-gradient(135deg,#00cec9,#55efc4);color:#000}
 .g-toggle button.on-services{background:linear-gradient(135deg,#fd79a8,#e84393);color:#fff}
-
-/* GRID */
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
 .wide{grid-column:1/-1}
 .mb{margin-bottom:20px}
-
-/* TABLE */
 .tbl-wrap{overflow-x:auto;max-height:420px;overflow-y:auto}
 table{width:100%;border-collapse:collapse;font-size:.76rem}
 thead th{padding:10px 12px;text-align:right;font-weight:600;color:var(--t3);font-size:.66rem;letter-spacing:.3px;border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0;background:rgba(10,10,25,.95);cursor:pointer;user-select:none}
@@ -123,13 +106,12 @@ tbody td{padding:8px 12px;white-space:nowrap;color:var(--t2)}
 .badge-goods{background:rgba(0,206,201,.1);color:var(--a2);border:1px solid rgba(0,206,201,.2)}
 .badge-services{background:rgba(253,121,168,.1);color:var(--a3);border:1px solid rgba(253,121,168,.2)}
 .badge-cat{background:rgba(108,92,231,.1);color:var(--a1);border:1px solid rgba(108,92,231,.2)}
+.badge-excluded{background:rgba(253,203,110,.1);color:var(--a4);border:1px solid rgba(253,203,110,.2)}
 .tbl-footer{padding:12px 18px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);font-size:.72rem;color:var(--t3);flex-wrap:wrap;gap:8px}
 .pagination{display:flex;gap:3px}
 .pagination button{padding:5px 10px;background:var(--glass);border:1px solid var(--border);border-radius:var(--rx);color:var(--t2);font-family:inherit;font-size:.72rem;cursor:pointer;transition:all .3s}
 .pagination button:hover,.pagination button.active{background:var(--a1);color:#fff;border-color:var(--a1)}
 .pagination button:disabled{opacity:.3;cursor:default}
-
-/* TOP LIST */
 .top-list{list-style:none}
 .top-list li{display:flex;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:.76rem}
 .top-list li:last-child{border:none}
@@ -139,71 +121,41 @@ tbody td{padding:8px 12px;white-space:nowrap;color:var(--t2)}
 .top-bar{width:70px;height:4px;background:rgba(255,255,255,.05);border-radius:2px;margin:0 8px;overflow:hidden;flex-shrink:0}
 .top-bar-fill{height:100%;border-radius:2px;background:linear-gradient(135deg,#00cec9,#55efc4);transition:width .8s ease}
 .top-amount{color:var(--a2);font-weight:700;font-size:.72rem;white-space:nowrap}
-
-/* SELECT LIST */
 .sel-list{max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--rs);padding:8px}
 .sel-item{padding:8px 12px;border-radius:var(--rx);cursor:pointer;transition:all .2s;font-size:.78rem;color:var(--t2);display:flex;justify-content:space-between;align-items:center}
 .sel-item:hover{background:var(--glass);color:var(--t1)}
 .sel-item.active{background:rgba(108,92,231,.12);color:var(--a1)}
 .sel-item .val{font-size:.7rem;color:var(--t3)}
-
-/* STAT MINI */
 .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px}
 .stat-mini{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:12px;text-align:center}
 .stat-mini .v{font-size:1.05rem;font-weight:700;color:var(--a2)}
 .stat-mini .l{font-size:.65rem;color:var(--t3);margin-top:2px}
-
-/* SEARCH */
 .search-box{position:relative}
 .search-box input{width:100%;padding:10px 14px;padding-right:36px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--rs);color:var(--t1);font-family:inherit;font-size:.85rem;outline:none;transition:all .3s}
 .search-box input:focus{border-color:var(--a1);box-shadow:0 0 0 3px rgba(108,92,231,.1)}
 .search-box .si{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--t3)}
-
-/* TAGS */
 .tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.68rem;margin:2px;cursor:pointer;transition:all .2s;border:1px solid var(--border);color:var(--t2)}
 .tag:hover,.tag.active{background:rgba(108,92,231,.15);border-color:var(--a1);color:var(--a1)}
-
-/* SLIDER */
 .slider-group{margin-bottom:16px}
 .slider-group label{display:flex;justify-content:space-between;font-size:.78rem;color:var(--t2);margin-bottom:6px}
 .slider-group input[type=range]{width:100%;accent-color:var(--a1);height:6px;cursor:pointer}
 .result-box{background:rgba(108,92,231,.08);border:1px solid rgba(108,92,231,.2);border-radius:var(--rs);padding:16px;margin-top:16px}
 .result-box .big{font-size:1.5rem;font-weight:800;color:var(--a1)}
-
-/* EMPTY STATE */
 .empty{text-align:center;padding:40px;color:var(--t3)}
 .empty .icon{font-size:3rem;margin-bottom:10px;opacity:.5}
 .empty p{font-size:.85rem}
-
-/* TABS */
-.tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
-.tab{padding:8px 16px;border-radius:var(--rx);background:var(--glass);border:1px solid var(--border);color:var(--t2);font-size:.78rem;cursor:pointer;transition:all .2s;font-family:inherit}
-.tab:hover{border-color:var(--a1)}
-.tab.active{background:rgba(108,92,231,.15);border-color:var(--a1);color:var(--a1);font-weight:600}
-
-/* PROGRESS BAR */
 .prog{height:8px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden;margin-top:6px}
 .prog-fill{height:100%;border-radius:4px;transition:width .8s ease}
-
-/* PRICE CHANGE */
 .price-up{color:#e17055;font-weight:700}
 .price-down{color:#00b894;font-weight:700}
 .price-same{color:var(--t3)}
-
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px}
-.modal-overlay.show{display:flex}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);max-width:700px;width:100%;max-height:80vh;overflow-y:auto;padding:24px}
-.modal h3{margin-bottom:16px;font-size:1rem}
-.modal-close{float:left;background:none;border:none;color:var(--t3);font-size:1.2rem;cursor:pointer}
-
-/* RESPONSIVE */
+.excluded-notice{background:rgba(253,203,110,.08);border:1px solid rgba(253,203,110,.2);border-radius:var(--rs);padding:12px 16px;margin-bottom:16px;font-size:.78rem;color:var(--a4);display:flex;align-items:center;gap:8px}
 @media(max-width:1024px){
   .sidebar{transform:translateX(100%)}
   .sidebar.open{transform:translateX(0)}
   .main{margin-right:0}
   .menu-btn{display:flex!important}
-  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .grid-2,.grid-3{grid-template-columns:1fr}
 }
 @media(max-width:640px){
   .kpis{grid-template-columns:1fr 1fr}
@@ -217,10 +169,8 @@ tbody td{padding:8px 12px;white-space:nowrap;color:var(--t2)}
 <body>
 <div class="bg"></div>
 
-<!-- LOADER -->
 <div id="loader"><div class="spin"></div><div style="color:var(--t2);font-size:.85rem">در حال بارگذاری...</div></div>
 
-<!-- UPLOAD -->
 <div id="uploadScr">
   <div class="up-box">
     <h2>📂 راموز</h2>
@@ -234,9 +184,7 @@ tbody td{padding:8px 12px;white-space:nowrap;color:var(--t2)}
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
-  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sb-brand">
       <div class="sb-icon">ر</div>
@@ -269,7 +217,6 @@ tbody td{padding:8px 12px;white-space:nowrap;color:var(--t2)}
     </nav>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
     <header class="header">
       <div style="display:flex;align-items:center;gap:10px">
@@ -287,7 +234,8 @@ tbody td{padding:8px 12px;white-space:nowrap;color:var(--t2)}
 
 <script>
 /* ═══════════════════════════════════════════ */
-let RAW=[],FILT=[],charts={},CUR_PAGE='dashboard',PAGE_N=1,PG_SZ=50,SORT_F='date',SORT_D=-1;
+let RAW=[],MAIN_DATA=[],EXCLUDED_SUPPLIERS=[],EXCLUDED_CODES=[],FILT=[],charts={};
+let CUR_PAGE='dashboard',PAGE_N=1,PG_SZ=50,SORT_F='date',SORT_D=-1;
 const MO=['','فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const SEASONS=['بهار','تابستان','پاییز','زمستان'];
 const COLORS=['#6c5ce7','#00cec9','#fd79a8','#fdcb6e','#55efc4','#74b9ff','#e17055','#a29bfe','#fab1a0','#81ecec','#ffeaa7','#dfe6e9','#e84393','#0984e3','#00b894','#f39c12'];
@@ -321,9 +269,38 @@ function findRecords(d){
   }
   return null;
 }
+
 function processData(d){
-  RAW=(findRecords(d)||[]).filter(r=>r&&typeof r==='object').map(r=>({...r,total:parseFloat(r.total)||0,qty:parseFloat(r.qty)||0,rate:parseFloat(r.rate)||0,amount:parseFloat(r.amount)||0,year:parseInt(r.year)||0,month:parseInt(r.month)||0}));
+  // Extract excluded suppliers from data
+  EXCLUDED_SUPPLIERS=[];
+  EXCLUDED_CODES=[];
+  if(d&&typeof d==='object'&&!Array.isArray(d)){
+    if(Array.isArray(d.excludedSuppliers)){
+      EXCLUDED_SUPPLIERS=d.excludedSuppliers;
+      EXCLUDED_CODES=EXCLUDED_SUPPLIERS.map(s=>String(s.code));
+    }
+  }
+
+  RAW=(findRecords(d)||[]).filter(r=>r&&typeof r==='object').map(r=>({
+    ...r,
+    total:parseFloat(r.total)||0,
+    qty:parseFloat(r.qty)||0,
+    rate:parseFloat(r.rate)||0,
+    amount:parseFloat(r.amount)||0,
+    year:parseInt(r.year)||0,
+    month:parseInt(r.month)||0,
+    supplierCode:String(r.supplierCode||'')
+  }));
+
+  // Separate main data (excluding excluded suppliers)
+  MAIN_DATA=RAW.filter(r=>!EXCLUDED_CODES.includes(r.supplierCode));
+
+  console.log(`✅ Total records: ${RAW.length}`);
+  console.log(`✅ Main data (excluded removed): ${MAIN_DATA.length}`);
+  console.log(`✅ Excluded suppliers: ${EXCLUDED_SUPPLIERS.length}`,EXCLUDED_SUPPLIERS);
+
   if(!RAW.length){document.getElementById('loader').innerHTML='<div style="text-align:center;color:var(--a3)">⚠ داده‌ای یافت نشد</div>';return}
+
   document.getElementById('loader').classList.add('h');
   document.getElementById('uploadScr').classList.remove('show');
   document.getElementById('app').classList.add('show');
@@ -332,13 +309,11 @@ function processData(d){
 }
 
 /* ═══ FILTERS ═══ */
-function getFilters(){
-  return{year:'',season:'',month:'',category:'',group:''};
-}
 let FILT_STATE={year:'',season:'',month:'',category:'',group:''};
 
 function applyFilters(){
-  FILT=RAW.filter(r=>{
+  // Always use MAIN_DATA (excluded suppliers removed)
+  FILT=MAIN_DATA.filter(r=>{
     if(FILT_STATE.year&&r.year!=FILT_STATE.year)return false;
     if(FILT_STATE.season&&r.season!==FILT_STATE.season)return false;
     if(FILT_STATE.month&&r.month!=FILT_STATE.month)return false;
@@ -348,7 +323,6 @@ function applyFilters(){
   });
 }
 function resetFilters(){FILT_STATE={year:'',season:'',month:'',category:'',group:''};applyFilters();renderPage(CUR_PAGE)}
-function onFilterChange(){applyFilters();renderPage(CUR_PAGE)}
 
 /* ═══ HELPERS ═══ */
 const fmt=n=>n==null||isNaN(n)?'—':Math.round(n).toLocaleString('fa-IR');
@@ -359,8 +333,8 @@ const groupBy=(arr,k)=>{const m={};arr.forEach(r=>{const v=r[k]||'نامشخص';
 const destroyC=()=>{Object.keys(charts).forEach(k=>{if(charts[k]){charts[k].destroy();delete charts[k]}})};
 
 function filterBarHTML(){
-  const years=uniq(RAW,'year');
-  const cats=uniq(RAW,'category');
+  const years=uniq(MAIN_DATA,'year');
+  const cats=uniq(MAIN_DATA,'category');
   return `<div class="filters anim">
     <div class="fg"><label>📅 سال</label><select id="fYear" onchange="setF('year',this.value)"><option value="">همه</option>${years.map(y=>`<option value="${y}" ${FILT_STATE.year==y?'selected':''}>${y}</option>`).join('')}</select></div>
     <div class="fg"><label>🗓 فصل</label><select id="fSeason" onchange="setF('season',this.value)"><option value="">همه</option>${SEASONS.map(s=>`<option value="${s}" ${FILT_STATE.season===s?'selected':''}>${s}</option>`).join('')}</select></div>
@@ -372,7 +346,8 @@ function filterBarHTML(){
       <button class="${FILT_STATE.group==='خدمات'?'on-services':''}" onclick="setF('group','خدمات')">🔧 خدمات</button>
     </div></div>
     <button class="btn btn-sm btn-outline" onclick="resetFilters()">↺ پاک‌سازی</button>
-  </div>`;
+  </div>
+  ${EXCLUDED_CODES.length?`<div class="excluded-notice anim">⚠ ${EXCLUDED_CODES.length} فروشنده استثنا (${EXCLUDED_SUPPLIERS.map(s=>s.name).join('، ')}) از محاسبات حذف شده‌اند.</div>`:''}`;
 }
 function setF(k,v){FILT_STATE[k]=v;applyFilters();renderPage(CUR_PAGE)}
 
@@ -389,7 +364,7 @@ document.querySelectorAll('.nav-item').forEach(a=>{
 const PAGE_TITLES={dashboard:'⌂ داشبورد',categories:'◈ تحلیل دسته‌ها',offices:'▤ دفتر خریدها',items:'◫ شناسنامه کالا / خدمت',dna:'◎ DNA فروشنده',compare:'⇄ مقایسه فروشندگان',price:'↕ تحلیل تغییر قیمت',whatif:'⚡ What-If',changed:'⟳ What Changed?',askdata:'! AskData',exceptions:'⚠ فروشندگان استثنا',search:'⌕ جستجوی پیشرفته',datacenter:'⇩ مرکز داده'};
 
 function renderPage(page){
-  CUR_PAGE=page;destroyC();
+  CUR_PAGE=page;destroyC();PAGE_N=1;
   document.getElementById('pageTitle').textContent=PAGE_TITLES[page]||page;
   const el=document.getElementById('pageContent');
   switch(page){
@@ -410,9 +385,7 @@ function renderPage(page){
   }
 }
 
-/* ═══════════════════════════════════════════
-   PAGE 1: DASHBOARD
-   ═══════════════════════════════════════════ */
+/* ═══ PAGE 1: DASHBOARD ═══ */
 function renderDashboard(el){
   const total=sum(FILT);
   const suppliers=new Set(FILT.map(r=>r.supplier)).size;
@@ -502,9 +475,7 @@ function drawDashCharts(total,goods,services){
   charts.seasonal=new Chart(document.getElementById('chSeasonal'),{type:'bar',data:{labels:SEASONS,datasets:[{label:'کالا',data:gS,backgroundColor:'rgba(0,206,201,.6)',borderColor:'#00cec9',borderWidth:1,borderRadius:5},{label:'خدمات',data:sS,backgroundColor:'rgba(253,121,168,.6)',borderColor:'#fd79a8',borderWidth:1,borderRadius:5}]},options:{responsive:true,plugins:{legend:{labels:{color:'#8888a8',font:{family:'Vazirmatn',size:11},usePointStyle:true}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{color:'#8888a8',font:{family:'Vazirmatn',size:11}},grid:{display:false}},y:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:9},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,.03)'}}}}});
 }
 
-/* ═══════════════════════════════════════════
-   PAGE 2: CATEGORIES
-   ═══════════════════════════════════════════ */
+/* ═══ PAGE 2: CATEGORIES ═══ */
 function renderCategories(el){
   const catMap=groupBy(FILT,'category');
   const sorted=Object.entries(catMap).sort((a,b)=>sum(b[1])-sum(a[1]));
@@ -538,16 +509,11 @@ function renderCategories(el){
   charts.catBar=new Chart(document.getElementById('chCatBar'),{type:'bar',data:{labels:sorted.map(([k])=>k),datasets:[{data:sorted.map(([,v])=>sum(v)),backgroundColor:COLORS.slice(0,sorted.length).map(c=>c+'88'),borderColor:COLORS.slice(0,sorted.length),borderWidth:1,borderRadius:5}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{callback:v=>fmtS(v),color:'#55556a',font:{family:'Vazirmatn',size:9}},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#8888a8',font:{family:'Vazirmatn',size:9}},grid:{display:false}}}}});
 }
 
-/* ═══════════════════════════════════════════
-   PAGE 3: OFFICES (دفتر خریدها)
-   ═══════════════════════════════════════════ */
+/* ═══ PAGE 3: OFFICES ═══ */
 function renderOffices(el){
-  const byDate=groupBy(FILT,'date');
-  const dates=Object.keys(byDate).sort().reverse();
-
   el.innerHTML=filterBarHTML()+`
   <div class="card anim">
-    <div class="card-head"><h3>▤ دفتر خریدها (${fmt(FILT.length)} ردیف در ${fmt(dates.length)} تاریخ)</h3>
+    <div class="card-head"><h3>▤ دفتر خریدها (${fmt(FILT.length)} ردیف)</h3>
     <input type="text" id="offSearch" placeholder="🔍 جستجو..." style="padding:7px 12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--rx);color:var(--t1);font-family:inherit;font-size:.78rem;outline:none;width:200px" oninput="renderOffTable()"></div>
     <div class="card-body np"><div class="tbl-wrap" style="max-height:550px"><table><thead><tr>
       <th>تاریخ</th><th>فروشنده</th><th>شرح</th><th>دسته</th><th>گروه</th><th>پروژه</th><th>واحد</th><th>تعداد</th><th>فی</th><th>تخفیف</th><th>مالیات</th><th>مبلغ کل</th><th>یادداشت</th>
@@ -577,13 +543,11 @@ function renderOffTable(){
   document.getElementById('offPag').innerHTML=h;
 }
 
-/* ═══════════════════════════════════════════
-   PAGE 4: ITEMS (شناسنامه کالا)
-   ═══════════════════════════════════════════ */
+/* ═══ PAGE 4: ITEMS ═══ */
 let SEL_ITEM='';
 function renderItems(el){
   const items=uniq(FILT,'item');
-  if(!SEL_ITEM&&items.length)SEL_ITEM=items[0];
+  if(!SEL_ITEM||!items.includes(SEL_ITEM))SEL_ITEM=items[0]||'';
   const itemRecs=FILT.filter(r=>r.item===SEL_ITEM);
   const suppliers=[...new Set(itemRecs.map(r=>r.supplier))];
 
@@ -594,10 +558,10 @@ function renderItems(el){
       <div class="search-box" style="margin-bottom:12px"><span class="si">⌕</span><input type="text" id="itemSearch" placeholder="جستجوی کالا..." oninput="filterItemList()"></div>
       <div class="sel-list" id="itemList">${items.map(it=>`<div class="sel-item ${it===SEL_ITEM?'active':''}" onclick="SEL_ITEM='${it.replace(/'/g,"\\'")}';PAGE_N=1;renderPage('items')"><span>${it}</span><span class="val">${fmt(FILT.filter(r=>r.item===it).length)} خرید</span></div>`).join('')}</div>
     </div></div>
-    <div class="card"><div class="card-head"><h3>◫ شناسنامه: ${SEL_ITEM}</h3></div>
+    <div class="card"><div class="card-head"><h3>◫ شناسنامه: ${SEL_ITEM||'—'}</h3></div>
     <div class="card-body">
       <div class="stat-row" style="margin-bottom:14px">
-        <div class="stat-mini"><div class="v">${fmt(sum(itemRecs))}</div><div class="l">مبلغ کل (ریال)</div></div>
+        <div class="stat-mini"><div class="v">${fmtS(sum(itemRecs))}</div><div class="l">مبلغ کل</div></div>
         <div class="stat-mini"><div class="v">${fmt(itemRecs.length)}</div><div class="l">تعداد خرید</div></div>
         <div class="stat-mini"><div class="v">${fmt(suppliers.length)}</div><div class="l">فروشنده</div></div>
         <div class="stat-mini"><div class="v">${itemRecs.length?fmt(Math.max(...itemRecs.map(r=>r.rate))):'—'}</div><div class="l">بالاترین قیمت</div></div>
@@ -606,38 +570,36 @@ function renderItems(el){
       </div>
       <canvas id="chItemHistory" height="200"></canvas>
       <div style="margin-top:14px"><h4 style="font-size:.8rem;margin-bottom:8px">فروشندگان:</h4>
-      ${suppliers.map(s=>`<span class="tag">${s}</span>`).join('')}
+      ${suppliers.map(s=>`<span class="tag">${s}</span>`).join('')||'<span style="color:var(--t3)">—</span>'}
       </div>
     </div></div>
   </div>
   <div class="card anim">
-    <div class="card-head"><h3>📋 تاریخچه خرید ${SEL_ITEM}</h3></div>
+    <div class="card-head"><h3>📋 تاریخچه خرید ${SEL_ITEM||'—'}</h3></div>
     <div class="card-body np"><div class="tbl-wrap"><table><thead><tr>
       <th>تاریخ</th><th>فروشنده</th><th>تعداد</th><th>واحد</th><th>فی</th><th>مبلغ کل</th><th>پروژه</th>
     </tr></thead><tbody>
     ${itemRecs.sort((a,b)=>(b.date||'').localeCompare(a.date||'','fa')).map(r=>`<tr>
       <td>${r.date}</td><td>${r.supplier}</td><td>${fmt(r.qty)}</td><td>${r.unit||'—'}</td>
-      <td>${fmt(r.rate)}</td><td style="font-weight:700;color:var(--a2)">${fmt(r.total)}</td><td>${r.project||'—'}</td></tr>`).join('')}
+      <td>${fmt(r.rate)}</td><td style="font-weight:700;color:var(--a2)">${fmt(r.total)}</td><td>${r.project||'—'}</td></tr>`).join('')||'<tr><td colspan="7" style="text-align:center;color:var(--t3)">داده‌ای یافت نشد</td></tr>'}
     </tbody></table></div></div>
   </div>`;
 
-  const sorted=[...itemRecs].sort((a,b)=>(a.date||'').localeCompare(b.date||'','fa'));
-  charts.itemHist=new Chart(document.getElementById('chItemHistory'),{type:'line',data:{labels:sorted.map(r=>r.date),datasets:[{label:'قیمت واحد',data:sorted.map(r=>r.rate),borderColor:'#00cec9',backgroundColor:'rgba(0,206,201,.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:8},maxRotation:45},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:9},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,.03)'}}}}});
+  if(itemRecs.length){
+    const sorted=[...itemRecs].sort((a,b)=>(a.date||'').localeCompare(b.date||'','fa'));
+    charts.itemHist=new Chart(document.getElementById('chItemHistory'),{type:'line',data:{labels:sorted.map(r=>r.date),datasets:[{label:'قیمت واحد',data:sorted.map(r=>r.rate),borderColor:'#00cec9',backgroundColor:'rgba(0,206,201,.1)',fill:true,tension:.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:8},maxRotation:45},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:9},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,.03)'}}}}});
+  }
 }
 function filterItemList(){
   const q=document.getElementById('itemSearch').value.trim().toLowerCase();
-  document.querySelectorAll('#itemList .sel-item').forEach(el=>{
-    el.style.display=el.textContent.toLowerCase().includes(q)?'':'none';
-  });
+  document.querySelectorAll('#itemList .sel-item').forEach(el=>{el.style.display=el.textContent.toLowerCase().includes(q)?'':'none'});
 }
 
-/* ═══════════════════════════════════════════
-   PAGE 5: DNA SUPPLIER
-   ═══════════════════════════════════════════ */
+/* ═══ PAGE 5: DNA SUPPLIER ═══ */
 let SEL_SUP='';
 function renderDNA(el){
   const sups=uniq(FILT,'supplier');
-  if(!SEL_SUP&&sups.length)SEL_SUP=sups[0];
+  if(!SEL_SUP||!sups.includes(SEL_SUP))SEL_SUP=sups[0]||'';
   const supRecs=FILT.filter(r=>r.supplier===SEL_SUP);
   const cats=groupBy(supRecs,'category');
   const totalSup=sum(supRecs);
@@ -647,56 +609,57 @@ function renderDNA(el){
     <div class="card"><div class="card-head"><h3>🏢 انتخاب فروشنده</h3></div>
     <div class="card-body">
       <div class="search-box" style="margin-bottom:12px"><span class="si">⌕</span><input type="text" id="supSearch" placeholder="جستجوی فروشنده..." oninput="filterSupList()"></div>
-      <div class="sel-list" id="supList">${sups.map(s=>`<div class="sel-item ${s===SEL_SUP?'active':''}" onclick="SEL_SUP='${s.replace(/'/g,"\\'")}';PAGE_N=1;renderPage('dna')"><span>${s}</span><span class="val">${fmt(sum(FILT.filter(r=>r.supplier===s)))}</span></div>`).join('')}</div>
+      <div class="sel-list" id="supList">${sups.map(s=>`<div class="sel-item ${s===SEL_SUP?'active':''}" onclick="SEL_SUP='${s.replace(/'/g,"\\'")}';PAGE_N=1;renderPage('dna')"><span>${s}</span><span class="val">${fmtS(sum(FILT.filter(r=>r.supplier===s)))}</span></div>`).join('')}</div>
     </div></div>
-    <div class="card"><div class="card-head"><h3>◎ DNA فروشنده: ${SEL_SUP}</h3></div>
+    <div class="card"><div class="card-head"><h3>◎ DNA فروشنده: ${SEL_SUP||'—'}</h3></div>
     <div class="card-body">
       <div class="stat-row" style="margin-bottom:14px">
         <div class="stat-mini"><div class="v">${fmtS(totalSup)}</div><div class="l">مبلغ کل خرید</div></div>
         <div class="stat-mini"><div class="v">${fmt(supRecs.length)}</div><div class="l">تعداد تراکنش</div></div>
         <div class="stat-mini"><div class="v">${fmt(Object.keys(cats).length)}</div><div class="l">تنوع دسته</div></div>
         <div class="stat-mini"><div class="v">${fmt(uniq(supRecs,'item').length)}</div><div class="l">اقلام</div></div>
-        <div class="stat-mini"><div class="v">${supRecs.length?fmt(totalSup/supRecs.length):'—'}</div><div class="l">میانگین خرید</div></div>
+        <div class="stat-mini"><div class="v">${supRecs.length?fmtS(totalSup/supRecs.length):'—'}</div><div class="l">میانگین خرید</div></div>
         <div class="stat-mini"><div class="v">${supRecs.length?supRecs[supRecs.length-1].date:'—'}</div><div class="l">آخرین خرید</div></div>
       </div>
-      <div style="margin-bottom:14px"><h4 style="font-size:.8rem;margin-bottom:8px">دسته‌بندی‌های فروشنده:</h4>
+      <div style="margin-bottom:14px"><h4 style="font-size:.8rem;margin-bottom:8px">دسته‌بندی‌ها:</h4>
       ${Object.entries(cats).sort((a,b)=>sum(b[1])-sum(a[1])).map(([c,recs])=>`
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:.78rem">
           <span>${c}</span><span style="color:var(--a2);font-weight:600">${fmtS(sum(recs))}</span>
         </div>
         <div class="prog" style="margin-bottom:10px"><div class="prog-fill" style="width:${totalSup>0?(sum(recs)/totalSup*100):0}%;background:linear-gradient(135deg,#6c5ce7,#a855f7)"></div></div>
-      `).join('')}
+      `).join('')||'<span style="color:var(--t3)">—</span>'}
       </div>
       <canvas id="chSupMonthly" height="180"></canvas>
     </div></div>
   </div>
   <div class="card anim">
-    <div class="card-head"><h3>📋 تراکنش‌های ${SEL_SUP}</h3></div>
+    <div class="card-head"><h3>📋 تراکنش‌های ${SEL_SUP||'—'}</h3></div>
     <div class="card-body np"><div class="tbl-wrap"><table><thead><tr>
       <th>تاریخ</th><th>شرح</th><th>دسته</th><th>گروه</th><th>تعداد</th><th>فی</th><th>مبلغ کل</th>
     </tr></thead><tbody>
     ${supRecs.sort((a,b)=>(b.date||'').localeCompare(a.date||'','fa')).map(r=>`<tr>
       <td>${r.date}</td><td>${r.item||'—'}</td><td><span class="badge badge-cat">${r.category||'—'}</span></td>
       <td><span class="badge ${r.group==='کالا'?'badge-goods':'badge-services'}">${r.group||'—'}</span></td>
-      <td>${fmt(r.qty)}</td><td>${fmt(r.rate)}</td><td style="font-weight:700;color:var(--a2)">${fmt(r.total)}</td></tr>`).join('')}
+      <td>${fmt(r.qty)}</td><td>${fmt(r.rate)}</td><td style="font-weight:700;color:var(--a2)">${fmt(r.total)}</td></tr>`).join('')||'<tr><td colspan="7" style="text-align:center;color:var(--t3)">داده‌ای یافت نشد</td></tr>'}
     </tbody></table></div></div>
   </div>`;
 
-  const monthly={};supRecs.forEach(r=>{const k=r.year+'/'+String(r.month).padStart(2,'0');monthly[k]=(monthly[k]||0)+(r.total||0)});
-  const ms=Object.entries(monthly).sort((a,b)=>a[0].localeCompare(b[0]));
-  charts.supM=new Chart(document.getElementById('chSupMonthly'),{type:'bar',data:{labels:ms.map(([k])=>{const[y,m]=k.split('/');return MO[+m]+' '+y}),datasets:[{data:ms.map(([,v])=>v),backgroundColor:'rgba(108,92,231,.5)',borderColor:'#6c5ce7',borderWidth:1,borderRadius:4}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:8},maxRotation:45},grid:{display:false}},y:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:8},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,.03)'}}}}});
+  if(supRecs.length){
+    const monthly={};supRecs.forEach(r=>{const k=r.year+'/'+String(r.month).padStart(2,'0');monthly[k]=(monthly[k]||0)+(r.total||0)});
+    const ms=Object.entries(monthly).sort((a,b)=>a[0].localeCompare(b[0]));
+    charts.supM=new Chart(document.getElementById('chSupMonthly'),{type:'bar',data:{labels:ms.map(([k])=>{const[y,m]=k.split('/');return MO[+m]+' '+y}),datasets:[{data:ms.map(([,v])=>v),backgroundColor:'rgba(108,92,231,.5)',borderColor:'#6c5ce7',borderWidth:1,borderRadius:4}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:8},maxRotation:45},grid:{display:false}},y:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:8},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,.03)'}}}}});
+  }
 }
 function filterSupList(){
   const q=document.getElementById('supSearch').value.trim().toLowerCase();
   document.querySelectorAll('#supList .sel-item').forEach(el=>{el.style.display=el.textContent.toLowerCase().includes(q)?'':'none'});
 }
 
-/* ═══════════════════════════════════════════
-   PAGE 6: COMPARE SUPPLIERS
-   ═══════════════════════════════════════════ */
+/* ═══ PAGE 6: COMPARE ═══ */
 function renderCompare(el){
   const supMap=groupBy(FILT,'supplier');
   const sorted=Object.entries(supMap).sort((a,b)=>sum(b[1])-sum(a[1])).slice(0,20);
+  const totalAll=sum(FILT);
 
   el.innerHTML=filterBarHTML()+`
   <div class="grid-2 anim">
@@ -709,7 +672,7 @@ function renderCompare(el){
       <th>#</th><th>فروشنده</th><th>تعداد تراکنش</th><th>مبلغ کل</th><th>میانگین</th><th>بزرگترین</th><th>تنوع اقلام</th><th>تنوع دسته</th><th>سهم</th>
     </tr></thead><tbody>
     ${sorted.map(([name,recs],i)=>{
-      const t=sum(recs),totalAll=sum(FILT);
+      const t=sum(recs);
       return`<tr><td>${i+1}</td><td style="font-weight:600;color:var(--t1)">${name}</td>
       <td>${fmt(recs.length)}</td><td style="font-weight:700;color:var(--a2)">${fmt(t)}</td>
       <td>${fmtS(t/recs.length)}</td><td>${fmtS(Math.max(...recs.map(r=>r.total)))}</td>
@@ -723,9 +686,7 @@ function renderCompare(el){
   charts.comparePie=new Chart(document.getElementById('chComparePie'),{type:'doughnut',data:{labels:sorted.slice(0,8).map(([k])=>k),datasets:[{data:sorted.slice(0,8).map(([,v])=>sum(v)),backgroundColor:COLORS.slice(0,8),borderWidth:0}]},options:{responsive:true,cutout:'55%',plugins:{legend:{position:'left',labels:{color:'#8888a8',font:{family:'Vazirmatn',size:9},usePointStyle:true}},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ریال'}}}}});
 }
 
-/* ═══════════════════════════════════════════
-   PAGE 7: PRICE ANALYSIS
-   ═══════════════════════════════════════════ */
+/* ═══ PAGE 7: PRICE ANALYSIS ═══ */
 function renderPrice(el){
   const itemMap=groupBy(FILT,'item');
   const priceData=[];
@@ -748,7 +709,7 @@ function renderPrice(el){
     <div class="stat-mini"><div class="v price-same">${fmt(priceData.filter(p=>p.change===0).length)}</div><div class="l">بدون تغییر</div></div>
   </div>
   <div class="card anim">
-    <div class="card-head"><h3>↕ تحلیل تغییر قیمت اقلام (خرید ۲ بار به بالا)</h3></div>
+    <div class="card-head"><h3>↕ تحلیل تغییر قیمت اقلام (۲ خرید به بالا)</h3></div>
     <div class="card-body np"><div class="tbl-wrap" style="max-height:500px"><table><thead><tr>
       <th>کالا / خدمت</th><th>تعداد خرید</th><th>اولین قیمت</th><th>آخرین قیمت</th><th>تغییر</th><th>درصد تغییر</th><th>حداقل</th><th>حداکثر</th><th>نمودار</th>
     </tr></thead><tbody>
@@ -761,14 +722,12 @@ function renderPrice(el){
       <td class="${cls}">${p.pct}%</td>
       <td>${fmt(p.min)}</td><td>${fmt(p.max)}</td>
       <td><div style="display:flex;align-items:flex-end;gap:1px;height:24px">${p.recs.slice(-8).map(r=>`<div style="width:4px;height:${Math.max(4,(r.rate/p.max*24))}px;background:${p.change>0?'#e17055':'#00b894'};border-radius:1px"></div>`).join('')}</div></td></tr>`;
-    }).join('')}
+    }).join('')||'<tr><td colspan="9" style="text-align:center;color:var(--t3)">داده‌ای یافت نشد</td></tr>'}
     </tbody></table></div></div>
   </div>`;
 }
 
-/* ═══════════════════════════════════════════
-   PAGE 8: WHAT-IF
-   ═══════════════════════════════════════════ */
+/* ═══ PAGE 8: WHAT-IF ═══ */
 function renderWhatIf(el){
   const total=sum(FILT);
   const goods=sum(FILT.filter(r=>r.group==='کالا'));
@@ -819,20 +778,15 @@ function updateWhatIf(){
   }
 }
 
-/* ═══════════════════════════════════════════
-   PAGE 9: WHAT CHANGED
-   ═══════════════════════════════════════════ */
+/* ═══ PAGE 9: WHAT CHANGED ═══ */
 function renderChanged(el){
   const periods=uniq(FILT,'period');
-  const p1=periods[0]||'',p2=periods.length>1?periods[1]:'';
-  const d1=FILT.filter(r=>r.period===p1),d2=FILT.filter(r=>r.period===p2);
-
   el.innerHTML=filterBarHTML()+`
   <div class="grid-2 anim">
     <div class="card"><div class="card-head"><h3>⟳ مقایسه دوره‌ها</h3></div>
     <div class="card-body">
-      <div class="fg" style="margin-bottom:12px"><label>دوره اول</label><select id="wcP1" onchange="updateChanged()">${periods.map(p=>`<option value="${p}" ${p===p1?'selected':''}>${p}</option>`).join('')}</select></div>
-      <div class="fg"><label>دوره دوم</label><select id="wcP2" onchange="updateChanged()">${periods.map(p=>`<option value="${p}" ${p===p2?'selected':''}>${p}</option>`).join('')}</select></div>
+      <div class="fg" style="margin-bottom:12px"><label>دوره اول</label><select id="wcP1" onchange="updateChanged()">${periods.map((p,i)=>`<option value="${p}" ${i===0?'selected':''}>${p}</option>`).join('')}</select></div>
+      <div class="fg"><label>دوره دوم</label><select id="wcP2" onchange="updateChanged()">${periods.map((p,i)=>`<option value="${p}" ${i===1?'selected':''}>${p}</option>`).join('')}</select></div>
       <div id="wcSummary" style="margin-top:16px"></div>
     </div></div>
     <div class="card"><div class="card-head"><h3>📊 نمودار مقایسه‌ای</h3></div><div class="card-body"><canvas id="chChanged"></canvas></div></div>
@@ -866,7 +820,6 @@ function updateChanged(){
     {label:p2,data:top.map(c=>sum(cats2[c]||[])),backgroundColor:'rgba(0,206,201,.5)',borderRadius:4}
   ]},options:{responsive:true,plugins:{legend:{labels:{color:'#8888a8',font:{family:'Vazirmatn',size:10},usePointStyle:true}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{color:'#8888a8',font:{family:'Vazirmatn',size:8},maxRotation:45},grid:{display:false}},y:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:8},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,.03)'}}}}});
 
-  // Changed items
   const items1=groupBy(d1,'item'),items2=groupBy(d2,'item');
   const allItems=[...new Set([...Object.keys(items1),...Object.keys(items2)])];
   const changes=allItems.map(item=>{
@@ -886,13 +839,11 @@ function updateChanged(){
       <td>${fmt(c.avg1)}</td><td>${fmt(c.avg2)}</td>
       <td class="${cls}">${c.diff>0?'▲':c.diff<0?'▼':'—'} ${fmt(Math.abs(c.diff))}</td>
       <td class="${cls}">${c.pct}%</td></tr>`;
-    }).join('')}
+    }).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--t3)">داده‌ای یافت نشد</td></tr>'}
     </tbody></table></div></div>`;
 }
 
-/* ═══════════════════════════════════════════
-   PAGE 10: ASK DATA
-   ═══════════════════════════════════════════ */
+/* ═══ PAGE 10: ASK DATA ═══ */
 function renderAskData(el){
   el.innerHTML=filterBarHTML()+`
   <div class="card anim" style="margin-bottom:20px">
@@ -907,22 +858,21 @@ function renderAskData(el){
 }
 function askQuestion(q){
   let answer='';
+  const cats=groupBy(FILT,'category');
+  const catSorted=Object.entries(cats).sort((a,b)=>sum(b[1])-sum(a[1]));
+  const sups=groupBy(FILT,'supplier');
+  const supSorted=Object.entries(sups).sort((a,b)=>sum(b[1])-sum(a[1]));
+
   switch(q){
-    case 'بیشترین خرید در کدام دسته است؟':{
-      const cats=groupBy(FILT,'category');
-      const sorted=Object.entries(cats).sort((a,b)=>sum(b[1])-sum(a[1]));
+    case 'بیشترین خرید در کدام دسته است؟':
       answer=`<div class="card"><div class="card-head"><h3>📊 پاسخ</h3></div><div class="card-body">
-        <p style="font-size:1rem;margin-bottom:16px">بیشترین خرید در دسته <b style="color:var(--a1)">«${sorted[0]?sorted[0][0]:'—'}»</b> با مبلغ <b style="color:var(--a2)">${fmtS(sum(sorted[0][1]))} ریال</b></p>
-        ${sorted.slice(0,5).map(([c,recs],i)=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:.82rem"><span>${i+1}. ${c}</span><span style="color:var(--a2);font-weight:600">${fmtS(sum(recs))}</span></div>`).join('')}
+        <p style="font-size:1rem;margin-bottom:16px">بیشترین خرید در دسته <b style="color:var(--a1)">«${catSorted[0]?catSorted[0][0]:'—'}»</b> با مبلغ <b style="color:var(--a2)">${fmtS(sum(catSorted[0][1]))} ریال</b></p>
+        ${catSorted.slice(0,5).map(([c,recs],i)=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:.82rem"><span>${i+1}. ${c}</span><span style="color:var(--a2);font-weight:600">${fmtS(sum(recs))}</span></div>`).join('')}
       </div></div>`;break;
-    }
-    case '۵ فروشنده برتر کدامند؟':{
-      const sups=groupBy(FILT,'supplier');
-      const sorted=Object.entries(sups).sort((a,b)=>sum(b[1])-sum(a[1])).slice(0,5);
+    case '۵ فروشنده برتر کدامند؟':
       answer=`<div class="card"><div class="card-head"><h3>🏆 پاسخ</h3></div><div class="card-body">
-        ${sorted.map(([s,recs],i)=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.03)"><span><span class="top-rank ${i<3?['r1','r2','r3'][i]:'rn'}" style="display:inline-flex;margin-left:8px">${i+1}</span>${s}</span><span style="color:var(--a2);font-weight:700">${fmtS(sum(recs))} ریال</span></div>`).join('')}
+        ${supSorted.slice(0,5).map(([s,recs],i)=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.03)"><span><span class="top-rank ${i<3?['r1','r2','r3'][i]:'rn'}" style="display:inline-flex;margin-left:8px">${i+1}</span>${s}</span><span style="color:var(--a2);font-weight:700">${fmtS(sum(recs))} ریال</span></div>`).join('')}
       </div></div>`;break;
-    }
     case 'مجموع خرید کالا چقدر است؟':{
       const g=sum(FILT.filter(r=>r.group==='کالا'));
       answer=`<div class="card"><div class="card-head"><h3>🛒 پاسخ</h3></div><div class="card-body"><div class="kpi-v" style="font-size:1.8rem">${fmtS(g)} ریال</div><p style="color:var(--t2);font-size:.8rem;margin-top:6px">مجموع خرید کالا در فیلترهای فعلی</p></div></div>`;break;
@@ -947,9 +897,9 @@ function askQuestion(q){
     }
     case 'کدام فصل بیشترین خرید را داشته؟':{
       const seasons=groupBy(FILT,'season');
-      const sorted=Object.entries(seasons).sort((a,b)=>sum(b[1])-sum(a[1]));
+      const sSorted=Object.entries(seasons).sort((a,b)=>sum(b[1])-sum(a[1]));
       answer=`<div class="card"><div class="card-head"><h3>🗓 پاسخ</h3></div><div class="card-body">
-        ${sorted.map(([s,recs],i)=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.03)"><span>${['🌸','☀️','🍂','❄️'][SEASONS.indexOf(s)]||''} ${s}</span><span style="color:var(--a2);font-weight:700">${fmtS(sum(recs))} ریال</span></div>`).join('')}
+        ${sSorted.map(([s,recs],i)=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.03)"><span>${['🌸','☀️','🍂','❄️'][SEASONS.indexOf(s)]||''} ${s}</span><span style="color:var(--a2);font-weight:700">${fmtS(sum(recs))} ریال</span></div>`).join('')}
       </div></div>`;break;
     }
     default:answer='<div class="empty"><p>سوال شناخته نشد</p></div>';
@@ -957,53 +907,61 @@ function askQuestion(q){
   document.getElementById('askResult').innerHTML=answer;
 }
 
-/* ═══════════════════════════════════════════
-   PAGE 11: EXCEPTIONS
-   ═══════════════════════════════════════════ */
+/* ═══ PAGE 11: EXCEPTIONS (CORRECTED!) ═══ */
 function renderExceptions(el){
-  const supMap=groupBy(FILT,'supplier');
-  const exceptions=[];
+  // Use the actual excludedSuppliers from data.json
+  const excludedRecords=RAW.filter(r=>EXCLUDED_CODES.includes(r.supplierCode));
+  const totalExcluded=sum(excludedRecords);
 
-  for(const[sup,recs]of Object.entries(supMap)){
-    const issues=[];
-    // Only 1 transaction
-    if(recs.length===1)issues.push('فقط ۱ تراکنش');
-    // Very high amount
-    const maxT=Math.max(...recs.map(r=>r.total));
-    if(maxT>1e9)issues.push('خرید بالای ۱ میلیارد');
-    // High variety
-    if(uniq(recs,'category').length>5)issues.push('تنوع بالای دسته ('+uniq(recs,'category').length+')');
-    // Services with goods name
-    const mixedGroup=[...new Set(recs.map(r=>r.group))].length>1;
-    if(mixedGroup)issues.push('هم کالا هم خدمات');
-    if(issues.length)exceptions.push({sup,total:sum(recs),count:recs.length,issues});
-  }
-  exceptions.sort((a,b)=>b.total-a.total);
-
-  el.innerHTML=filterBarHTML()+`
-  <div class="stat-row anim">
-    <div class="stat-mini"><div class="v">${fmt(exceptions.length)}</div><div class="l">فروشندگان استثنا</div></div>
-    <div class="stat-mini"><div class="v">${fmt(exceptions.filter(e=>e.issues.includes('فقط ۱ تراکنش')).length)}</div><div class="l">فقط ۱ تراکنش</div></div>
-    <div class="stat-mini"><div class="v">${fmt(exceptions.filter(e=>e.issues.some(i=>i.includes('میلیارد'))).length)}</div><div class="l">خرید سنگین</div></div>
+  el.innerHTML=`
+  <div class="excluded-notice anim">⚠ این فروشندگان بر اساس تعریف فایل داده، «استثنا» محسوب می‌شوند و از سایر تحلیل‌ها حذف شده‌اند.</div>
+  
+  <div class="kpis anim">
+    <div class="kpi"><div class="kpi-ic">⚠</div><div class="kpi-lb">فروشندگان استثنا</div><div class="kpi-v">${fmt(EXCLUDED_SUPPLIERS.length)}</div><div class="kpi-sub">از فایل داده</div></div>
+    <div class="kpi"><div class="kpi-ic">📦</div><div class="kpi-lb">کل تراکنش‌ها</div><div class="kpi-v">${fmt(EXCLUDED_SUPPLIERS.reduce((s,e)=>s+e.count,0))}</div><div class="kpi-sub">ردیف خرید</div></div>
+    <div class="kpi"><div class="kpi-ic">💰</div><div class="kpi-lb">مبلغ کل استثنا</div><div class="kpi-v">${fmtS(EXCLUDED_SUPPLIERS.reduce((s,e)=>s+e.amount,0))}</div><div class="kpi-sub">ریال</div></div>
+    <div class="kpi"><div class="kpi-ic">📊</div><div class="kpi-lb">سهم از کل داده</div><div class="kpi-v">${RAW.length>0?(excludedRecords.length/RAW.length*100).toFixed(1):'0'}%</div><div class="kpi-sub">درصد تراکنش‌ها</div></div>
   </div>
-  <div class="card anim">
-    <div class="card-head"><h3>⚠ فروشندگان با شرایط خاص (${fmt(exceptions.length)})</h3></div>
-    <div class="card-body np"><div class="tbl-wrap" style="max-height:500px"><table><thead><tr>
-      <th>فروشنده</th><th>مبلغ کل</th><th>تعداد تراکنش</th><th>موارد استثنا</th>
+
+  <div class="card anim" style="margin-bottom:20px">
+    <div class="card-head"><h3>⚠ لیست فروشندگان استثنا (از فایل داده)</h3></div>
+    <div class="card-body np"><div class="tbl-wrap"><table><thead><tr>
+      <th>#</th><th>کد فروشنده</th><th>نام فروشنده</th><th>تعداد خرید</th><th>مبلغ کل (ریال)</th><th>میانگین هر خرید</th><th>سهم از مبلغ کل</th>
     </tr></thead><tbody>
-    ${exceptions.map(e=>`<tr>
-      <td style="font-weight:600;color:var(--t1)">${e.sup}</td>
-      <td style="color:var(--a2);font-weight:700">${fmt(e.total)}</td>
-      <td>${fmt(e.count)}</td>
-      <td>${e.issues.map(i=>`<span class="badge badge-services" style="margin:1px">${i}</span>`).join('')}</td>
-    </tr>`).join('')}
+    ${EXCLUDED_SUPPLIERS.map((s,i)=>{
+      const totalEx=EXCLUDED_SUPPLIERS.reduce((sum,e)=>sum+e.amount,0);
+      const pct=totalEx>0?(s.amount/totalEx*100).toFixed(1):'0';
+      return`<tr>
+        <td>${i+1}</td>
+        <td style="font-family:monospace;color:var(--t3)">${s.code}</td>
+        <td style="font-weight:600;color:var(--t1)">${s.name}</td>
+        <td>${fmt(s.count)}</td>
+        <td style="font-weight:700;color:var(--a4)">${fmt(s.amount)}</td>
+        <td>${fmtS(s.count>0?s.amount/s.count:0)}</td>
+        <td><div class="prog" style="width:80px;display:inline-block;vertical-align:middle"><div class="prog-fill" style="width:${pct}%;background:linear-gradient(135deg,#fdcb6e,#f39c12)"></div></div> <span style="font-size:.65rem">${pct}%</span></td>
+      </tr>`;
+    }).join('')}
     </tbody></table></div></div>
+  </div>
+
+  <div class="grid-2 anim">
+    <div class="card"><div class="card-head"><h3>📊 نمودار مبلغ فروشندگان استثنا</h3></div><div class="card-body"><canvas id="chExcluded"></canvas></div></div>
+    <div class="card"><div class="card-head"><h3>📋 تراکنش‌های فروشندگان استثنا (${fmt(excludedRecords.length)} ردیف)</h3></div>
+    <div class="card-body np"><div class="tbl-wrap" style="max-height:350px"><table><thead><tr>
+      <th>تاریخ</th><th>فروشنده</th><th>شرح</th><th>دسته</th><th>مبلغ</th>
+    </tr></thead><tbody>
+    ${excludedRecords.sort((a,b)=>(b.date||'').localeCompare(a.date||'','fa')).slice(0,50).map(r=>`<tr>
+      <td>${r.date||'—'}</td><td>${r.supplier||'—'}</td><td>${r.item||'—'}</td>
+      <td><span class="badge badge-cat">${r.category||'—'}</span></td>
+      <td style="font-weight:700;color:var(--a4)">${fmt(r.total)}</td></tr>`).join('')}
+    </tbody></table></div></div>
+    </div>
   </div>`;
+
+  charts.excluded=new Chart(document.getElementById('chExcluded'),{type:'bar',data:{labels:EXCLUDED_SUPPLIERS.map(s=>s.name),datasets:[{data:EXCLUDED_SUPPLIERS.map(s=>s.amount),backgroundColor:['rgba(253,203,110,.6)','rgba(116,185,255,.6)','rgba(253,121,168,.6)','rgba(85,239,196,.6)','rgba(108,92,231,.6)'],borderColor:['#fdcb6e','#74b9ff','#fd79a8','#55efc4','#6c5ce7'],borderWidth:1,borderRadius:5}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{callback:v=>fmtS(v),color:'#55556a',font:{family:'Vazirmatn',size:9}},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#8888a8',font:{family:'Vazirmatn',size:10}},grid:{display:false}}}}});
 }
 
-/* ═══════════════════════════════════════════
-   PAGE 12: ADVANCED SEARCH
-   ═══════════════════════════════════════════ */
+/* ═══ PAGE 12: SEARCH ═══ */
 function renderSearch(el){
   el.innerHTML=filterBarHTML()+`
   <div class="card anim" style="margin-bottom:20px">
@@ -1058,20 +1016,18 @@ function doAdvancedSearch(){
   </div>`;
 }
 
-/* ═══════════════════════════════════════════
-   PAGE 13: DATA CENTER
-   ═══════════════════════════════════════════ */
+/* ═══ PAGE 13: DATA CENTER ═══ */
 function renderDataCenter(el){
   const fields=['supplierCode','supplier','invoice','date','itemCode','item','unit','project','notes','qty','rate','amount','discount','vat','total','category','group','unitPrice','year','month','season','period'];
 
   el.innerHTML=filterBarHTML()+`
   <div class="stat-row anim">
     <div class="stat-mini"><div class="v">${fmt(RAW.length)}</div><div class="l">کل رکوردها</div></div>
-    <div class="stat-mini"><div class="v">${fmt(FILT.length)}</div><div class="l">رکوردهای فیلتر شده</div></div>
-    <div class="stat-mini"><div class="v">${fmt(fields.length)}</div><div class="l">تعداد فیلدها</div></div>
+    <div class="stat-mini"><div class="v">${fmt(MAIN_DATA.length)}</div><div class="l">رکوردهای اصلی</div></div>
+    <div class="stat-mini"><div class="v">${fmt(FILT.length)}</div><div class="l">فیلتر شده</div></div>
+    <div class="stat-mini"><div class="v">${fmt(EXCLUDED_SUPPLIERS.length)}</div><div class="l">فروشندگان استثنا</div></div>
+    <div class="stat-mini"><div class="v">${fmt(RAW.filter(r=>EXCLUDED_CODES.includes(r.supplierCode)).length)}</div><div class="l">تراکنش‌های استثنا</div></div>
     <div class="stat-mini"><div class="v">${fmt(uniq(RAW,'supplier').length)}</div><div class="l">فروشندگان یکتا</div></div>
-    <div class="stat-mini"><div class="v">${fmt(uniq(RAW,'item').length)}</div><div class="l">اقلام یکتا</div></div>
-    <div class="stat-mini"><div class="v">${fmt(uniq(RAW,'category').length)}</div><div class="l">دسته‌بندی‌ها</div></div>
   </div>
   <div class="card anim" style="margin-bottom:20px">
     <div class="card-head"><h3>⇩ مرکز داده</h3>
