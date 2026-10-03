@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>راموز | Purchase Intelligence</title>
+<title>راموز | Purchase Intelligence Pro</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#06060f;--card:rgba(15,15,35,.75);--glass:rgba(255,255,255,.03);--border:rgba(255,255,255,.07);--a1:#6c5ce7;--a2:#00cec9;--a3:#fd79a8;--a4:#fdcb6e;--a5:#55efc4;--a6:#74b9ff;--t1:#e8e8f0;--t2:#8888a8;--t3:#55556a;--r:16px;--rs:10px;--rx:6px;--sb:260px}
@@ -17,17 +18,23 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--t1);min
 @keyframes bl{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(80px,-60px) scale(1.1)}66%{transform:translate(-40px,40px) scale(.95)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 .anim{animation:fadeUp .45s ease-out both}
+
+/* LOADER */
 #loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .4s}
 #loader.h{opacity:0;pointer-events:none}
 .spin{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--a1);border-radius:50%;animation:spin .7s linear infinite}
-#uploadScr{position:fixed;inset:0;z-index:9998;background:linear-gradient(135deg,#0c0c1d,#1a0a2e 50%,#0a1628);display:none;align-items:center;justify-content:center}
+
+/* UPLOAD */
+#uploadScr{position:fixed;inset:0;z-index:9998;background:linear-gradient(135deg,#0c0c1d,#1a0a2e 50%,#0a1628);display:none;align-items:center;justify-content:center;padding:20px}
 #uploadScr.show{display:flex}
-.up-box{background:var(--card);backdrop-filter:blur(40px);border:1px solid var(--border);border-radius:24px;padding:48px;max-width:480px;width:92%;text-align:center}
-.up-box h2{font-size:1.6rem;font-weight:900;background:linear-gradient(135deg,#6c5ce7,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.up-box{background:var(--card);backdrop-filter:blur(40px);border:1px solid var(--border);border-radius:24px;padding:48px;max-width:520px;width:100%;text-align:center}
+.up-box h2{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,#6c5ce7,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
 .up-box p{color:var(--t2);font-size:.85rem;margin-bottom:22px;line-height:2}
-.up-drop{border:2px dashed var(--border);border-radius:var(--r);padding:36px 16px;cursor:pointer;transition:all .3s;margin-bottom:18px}
-.up-drop:hover{border-color:var(--a1);background:rgba(108,92,231,.05)}
+.up-drop{border:2px dashed var(--border);border-radius:var(--r);padding:40px 16px;cursor:pointer;transition:all .3s;margin-bottom:18px}
+.up-drop:hover,.up-drop.dragover{border-color:var(--a1);background:rgba(108,92,231,.08);transform:scale(1.02)}
+.up-drop .icon{font-size:3rem;margin-bottom:10px}
 .btn{padding:12px 24px;background:linear-gradient(135deg,#6c5ce7,#a855f7);border:none;border-radius:var(--rs);color:#fff;font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
 .btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(108,92,231,.35)}
 .btn-sm{padding:7px 14px;font-size:.78rem;border-radius:var(--rx)}
@@ -35,6 +42,10 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--t1);min
 .btn-outline:hover{border-color:var(--a1);color:var(--a1);box-shadow:none;transform:none}
 .btn-danger{background:linear-gradient(135deg,#e84393,#fd79a8)}
 .btn-success{background:linear-gradient(135deg,#00b894,#55efc4);color:#000}
+.btn-warning{background:linear-gradient(135deg,#fdcb6e,#f39c12);color:#000}
+.file-info{margin-top:16px;padding:12px;background:rgba(85,239,196,.08);border:1px solid rgba(85,239,196,.2);border-radius:var(--rs);font-size:.8rem;color:var(--a5);display:none}
+
+/* APP */
 #app{display:none;position:relative;z-index:1;min-height:100vh}
 #app.show{display:flex}
 .sidebar{width:var(--sb);background:rgba(10,10,25,.88);backdrop-filter:blur(30px);border-left:1px solid var(--border);position:fixed;top:0;right:0;bottom:0;z-index:100;display:flex;flex-direction:column;transition:transform .3s;overflow-y:auto}
@@ -55,13 +66,17 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--t1);min
 .hdr-actions{display:flex;gap:8px;align-items:center}
 .menu-btn{display:none;width:36px;height:36px;background:var(--glass);border:1px solid var(--border);border-radius:var(--rx);align-items:center;justify-content:center;cursor:pointer;color:var(--t1);font-size:1rem}
 .content{padding:22px;flex:1}
+
+/* CARDS */
 .card{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r);box-shadow:0 8px 32px rgba(0,0,0,.25);overflow:hidden}
 .card-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .card-head h3{font-size:.88rem;font-weight:700;display:flex;align-items:center;gap:8px}
 .card-body{padding:20px}
 .card-body.np{padding:0}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:20px}
-.kpi{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r);padding:18px;position:relative;overflow:hidden;transition:all .3s}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px}
+.kpi{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r);padding:16px;position:relative;overflow:hidden;transition:all .3s;cursor:pointer}
 .kpi:hover{transform:translateY(-3px);box-shadow:0 0 30px rgba(108,92,231,.12)}
 .kpi::before{content:'';position:absolute;top:0;right:0;left:0;height:3px}
 .kpi:nth-child(1)::before{background:linear-gradient(135deg,#6c5ce7,#a855f7)}
@@ -70,86 +85,121 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--t1);min
 .kpi:nth-child(4)::before{background:linear-gradient(135deg,#fdcb6e,#f39c12)}
 .kpi:nth-child(5)::before{background:linear-gradient(135deg,#74b9ff,#0984e3)}
 .kpi:nth-child(6)::before{background:linear-gradient(135deg,#55efc4,#00b894)}
-.kpi-ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:10px;background:rgba(108,92,231,.1)}
-.kpi-lb{font-size:.68rem;color:var(--t3);font-weight:500;margin-bottom:4px}
-.kpi-v{font-size:1.35rem;font-weight:800;background:linear-gradient(135deg,#6c5ce7,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.kpi:nth-child(7)::before{background:linear-gradient(135deg,#a29bfe,#6c5ce7)}
+.kpi:nth-child(8)::before{background:linear-gradient(135deg,#fab1a0,#e17055)}
+.kpi-ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:10px;background:rgba(108,92,231,.1)}
+.kpi-lb{font-size:.65rem;color:var(--t3);font-weight:500;margin-bottom:4px}
+.kpi-v{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#6c5ce7,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .kpi:nth-child(2) .kpi-v{background:linear-gradient(135deg,#00cec9,#55efc4);-webkit-background-clip:text}
 .kpi:nth-child(3) .kpi-v{background:linear-gradient(135deg,#fd79a8,#e84393);-webkit-background-clip:text}
 .kpi:nth-child(4) .kpi-v{background:linear-gradient(135deg,#fdcb6e,#f39c12);-webkit-background-clip:text}
 .kpi:nth-child(5) .kpi-v{background:linear-gradient(135deg,#74b9ff,#0984e3);-webkit-background-clip:text}
 .kpi:nth-child(6) .kpi-v{background:linear-gradient(135deg,#55efc4,#00b894);-webkit-background-clip:text}
-.kpi-sub{font-size:.65rem;color:var(--t2);margin-top:3px}
+.kpi:nth-child(7) .kpi-v{background:linear-gradient(135deg,#a29bfe,#6c5ce7);-webkit-background-clip:text}
+.kpi:nth-child(8) .kpi-v{background:linear-gradient(135deg,#fab1a0,#e17055);-webkit-background-clip:text}
+.kpi-sub{font-size:.62rem;color:var(--t2);margin-top:3px}
+
+/* PERIOD BUTTONS */
+.period-btns{display:flex;gap:6px;flex-wrap:wrap}
+.period-btn{padding:6px 14px;background:var(--glass);border:1px solid var(--border);border-radius:var(--rx);color:var(--t2);font-family:inherit;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .2s}
+.period-btn:hover{border-color:var(--a1)}
+.period-btn.active{background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff;border-color:var(--a1)}
+
+/* FILTERS */
 .filters{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
-.fg{display:flex;flex-direction:column;gap:4px;min-width:140px;flex:1}
-.fg label{font-size:.65rem;color:var(--t3);font-weight:600}
-.fg select,.fg input{padding:8px 12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--rx);color:var(--t1);font-family:inherit;font-size:.8rem;outline:none;transition:all .3s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238888a8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 10px center}
+.fg{display:flex;flex-direction:column;gap:4px;min-width:130px;flex:1}
+.fg label{font-size:.62rem;color:var(--t3);font-weight:600}
+.fg select,.fg input{padding:8px 12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--rx);color:var(--t1);font-family:inherit;font-size:.78rem;outline:none;transition:all .3s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238888a8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 10px center}
 .fg input{background-image:none}
 .fg select:focus,.fg input:focus{border-color:var(--a1);box-shadow:0 0 0 3px rgba(108,92,231,.1)}
 .fg select option{background:#1a1a2e;color:#e8e8f0}
 .g-toggle{display:flex;border-radius:var(--rx);overflow:hidden;border:1px solid var(--border)}
-.g-toggle button{padding:8px 14px;background:rgba(255,255,255,.03);border:none;color:var(--t2);font-family:inherit;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .3s;white-space:nowrap}
+.g-toggle button{padding:8px 14px;background:rgba(255,255,255,.03);border:none;color:var(--t2);font-family:inherit;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .3s;white-space:nowrap}
 .g-toggle button.on-all{background:linear-gradient(135deg,#6c5ce7,#a855f7);color:#fff}
 .g-toggle button.on-goods{background:linear-gradient(135deg,#00cec9,#55efc4);color:#000}
 .g-toggle button.on-services{background:linear-gradient(135deg,#fd79a8,#e84393);color:#fff}
+
+/* GRID */
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
 .wide{grid-column:1/-1}
 .mb{margin-bottom:20px}
+
+/* TABLE */
 .tbl-wrap{overflow-x:auto;max-height:420px;overflow-y:auto}
-table{width:100%;border-collapse:collapse;font-size:.76rem}
-thead th{padding:10px 12px;text-align:right;font-weight:600;color:var(--t3);font-size:.66rem;letter-spacing:.3px;border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0;background:rgba(10,10,25,.95);cursor:pointer;user-select:none}
+table{width:100%;border-collapse:collapse;font-size:.74rem}
+thead th{padding:10px 12px;text-align:right;font-weight:600;color:var(--t3);font-size:.64rem;letter-spacing:.3px;border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0;background:rgba(10,10,25,.95);cursor:pointer;user-select:none}
 thead th:hover{color:var(--a1)}
 tbody tr{border-bottom:1px solid rgba(255,255,255,.02);transition:background .2s}
 tbody tr:hover{background:rgba(108,92,231,.04)}
 tbody td{padding:8px 12px;white-space:nowrap;color:var(--t2)}
-.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.63rem;font-weight:600}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.6rem;font-weight:600}
 .badge-goods{background:rgba(0,206,201,.1);color:var(--a2);border:1px solid rgba(0,206,201,.2)}
 .badge-services{background:rgba(253,121,168,.1);color:var(--a3);border:1px solid rgba(253,121,168,.2)}
 .badge-cat{background:rgba(108,92,231,.1);color:var(--a1);border:1px solid rgba(108,92,231,.2)}
-.badge-excluded{background:rgba(253,203,110,.1);color:var(--a4);border:1px solid rgba(253,203,110,.2)}
-.tbl-footer{padding:12px 18px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);font-size:.72rem;color:var(--t3);flex-wrap:wrap;gap:8px}
+.tbl-footer{padding:12px 18px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);font-size:.7rem;color:var(--t3);flex-wrap:wrap;gap:8px}
 .pagination{display:flex;gap:3px}
-.pagination button{padding:5px 10px;background:var(--glass);border:1px solid var(--border);border-radius:var(--rx);color:var(--t2);font-family:inherit;font-size:.72rem;cursor:pointer;transition:all .3s}
+.pagination button{padding:5px 10px;background:var(--glass);border:1px solid var(--border);border-radius:var(--rx);color:var(--t2);font-family:inherit;font-size:.7rem;cursor:pointer;transition:all .3s}
 .pagination button:hover,.pagination button.active{background:var(--a1);color:#fff;border-color:var(--a1)}
 .pagination button:disabled{opacity:.3;cursor:default}
+
+/* TOP LIST */
 .top-list{list-style:none}
-.top-list li{display:flex;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:.76rem}
+.top-list li{display:flex;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:.74rem}
 .top-list li:last-child{border:none}
-.top-rank{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;margin-left:8px;flex-shrink:0}
+.top-rank{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;margin-left:8px;flex-shrink:0}
 .r1{background:rgba(253,203,110,.15);color:var(--a4)}.r2{background:rgba(116,185,255,.15);color:var(--a6)}.r3{background:rgba(253,121,168,.15);color:var(--a3)}.rn{background:rgba(255,255,255,.05);color:var(--t3)}
 .top-name{flex:1;color:var(--t1);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .top-bar{width:70px;height:4px;background:rgba(255,255,255,.05);border-radius:2px;margin:0 8px;overflow:hidden;flex-shrink:0}
 .top-bar-fill{height:100%;border-radius:2px;background:linear-gradient(135deg,#00cec9,#55efc4);transition:width .8s ease}
-.top-amount{color:var(--a2);font-weight:700;font-size:.72rem;white-space:nowrap}
-.sel-list{max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--rs);padding:8px}
-.sel-item{padding:8px 12px;border-radius:var(--rx);cursor:pointer;transition:all .2s;font-size:.78rem;color:var(--t2);display:flex;justify-content:space-between;align-items:center}
-.sel-item:hover{background:var(--glass);color:var(--t1)}
-.sel-item.active{background:rgba(108,92,231,.12);color:var(--a1)}
-.sel-item .val{font-size:.7rem;color:var(--t3)}
-.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px}
+.top-amount{color:var(--a2);font-weight:700;font-size:.7rem;white-space:nowrap}
+
+/* STAT MINI */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
 .stat-mini{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:12px;text-align:center}
-.stat-mini .v{font-size:1.05rem;font-weight:700;color:var(--a2)}
-.stat-mini .l{font-size:.65rem;color:var(--t3);margin-top:2px}
+.stat-mini .v{font-size:1rem;font-weight:700;color:var(--a2)}
+.stat-mini .l{font-size:.62rem;color:var(--t3);margin-top:2px}
+
+/* LATEST */
+.latest-box{background:linear-gradient(135deg,rgba(108,92,231,.08),rgba(0,206,201,.05));border:1px solid rgba(108,92,231,.15);border-radius:var(--rs);padding:14px;margin-bottom:16px}
+.latest-box .title{font-size:.7rem;color:var(--t3);margin-bottom:6px}
+.latest-box .value{font-size:.9rem;font-weight:700;color:var(--a2)}
+
+/* SEARCH */
 .search-box{position:relative}
 .search-box input{width:100%;padding:10px 14px;padding-right:36px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--rs);color:var(--t1);font-family:inherit;font-size:.85rem;outline:none;transition:all .3s}
 .search-box input:focus{border-color:var(--a1);box-shadow:0 0 0 3px rgba(108,92,231,.1)}
 .search-box .si{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--t3)}
-.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.68rem;margin:2px;cursor:pointer;transition:all .2s;border:1px solid var(--border);color:var(--t2)}
+
+/* TAGS */
+.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.65rem;margin:2px;cursor:pointer;transition:all .2s;border:1px solid var(--border);color:var(--t2)}
 .tag:hover,.tag.active{background:rgba(108,92,231,.15);border-color:var(--a1);color:var(--a1)}
+
+/* SLIDER */
 .slider-group{margin-bottom:16px}
-.slider-group label{display:flex;justify-content:space-between;font-size:.78rem;color:var(--t2);margin-bottom:6px}
+.slider-group label{display:flex;justify-content:space-between;font-size:.75rem;color:var(--t2);margin-bottom:6px}
 .slider-group input[type=range]{width:100%;accent-color:var(--a1);height:6px;cursor:pointer}
 .result-box{background:rgba(108,92,231,.08);border:1px solid rgba(108,92,231,.2);border-radius:var(--rs);padding:16px;margin-top:16px}
-.result-box .big{font-size:1.5rem;font-weight:800;color:var(--a1)}
+.result-box .big{font-size:1.4rem;font-weight:800;color:var(--a1)}
+
+/* EMPTY */
 .empty{text-align:center;padding:40px;color:var(--t3)}
 .empty .icon{font-size:3rem;margin-bottom:10px;opacity:.5}
 .empty p{font-size:.85rem}
+
+/* PROGRESS */
 .prog{height:8px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden;margin-top:6px}
 .prog-fill{height:100%;border-radius:4px;transition:width .8s ease}
+
+/* PRICE */
 .price-up{color:#e17055;font-weight:700}
 .price-down{color:#00b894;font-weight:700}
 .price-same{color:var(--t3)}
-.excluded-notice{background:rgba(253,203,110,.08);border:1px solid rgba(253,203,110,.2);border-radius:var(--rs);padding:12px 16px;margin-bottom:16px;font-size:.78rem;color:var(--a4);display:flex;align-items:center;gap:8px}
+
+/* EXCLUDED NOTICE */
+.excluded-notice{background:rgba(253,203,110,.08);border:1px solid rgba(253,203,110,.2);border-radius:var(--rs);padding:12px 16px;margin-bottom:16px;font-size:.75rem;color:var(--a4);display:flex;align-items:center;gap:8px}
+
+/* RESPONSIVE */
 @media(max-width:1024px){
   .sidebar{transform:translateX(100%)}
   .sidebar.open{transform:translateX(0)}
@@ -169,21 +219,26 @@ tbody td{padding:8px 12px;white-space:nowrap;color:var(--t2)}
 <body>
 <div class="bg"></div>
 
+<!-- LOADER -->
 <div id="loader"><div class="spin"></div><div style="color:var(--t2);font-size:.85rem">در حال بارگذاری...</div></div>
 
+<!-- UPLOAD -->
 <div id="uploadScr">
   <div class="up-box">
     <h2>📂 راموز</h2>
-    <p>فایل <b>data.json</b> را انتخاب کنید:</p>
-    <div class="up-drop" onclick="document.getElementById('fileInp').click()">
-      <div style="font-size:2.5rem;margin-bottom:8px">📁</div>
+    <p>فایل <b>اکسل</b> یا <b>JSON</b> خود را انتخاب کنید</p>
+    <div class="up-drop" id="dropZone" onclick="document.getElementById('fileInp').click()">
+      <div class="icon">📁</div>
       <p style="margin:0;color:var(--t2);font-size:.85rem">کلیک کنید یا فایل را اینجا رها کنید</p>
+      <p style="margin:8px 0 0;font-size:.7rem;color:var(--t3)">فرمت‌های مجاز: xlsx, xls, json</p>
     </div>
-    <input type="file" id="fileInp" accept=".json" style="display:none">
-    <button class="btn" onclick="document.getElementById('fileInp').click()" style="width:100%">انتخاب فایل</button>
+    <input type="file" id="fileInp" accept=".xlsx,.xls,.json" style="display:none">
+    <button class="btn" onclick="document.getElementById('fileInp').click()" style="width:100%">📂 انتخاب فایل</button>
+    <div class="file-info" id="fileInfo"></div>
   </div>
 </div>
 
+<!-- APP -->
 <div id="app">
   <aside class="sidebar" id="sidebar">
     <div class="sb-brand">
@@ -224,6 +279,7 @@ tbody td{padding:8px 12px;white-space:nowrap;color:var(--t2)}
         <h1 id="pageTitle">⌂ داشبورد</h1>
       </div>
       <div class="hdr-actions">
+        <button class="btn btn-sm btn-outline" onclick="document.getElementById('fileInp').click()">📂 بارگذاری مجدد</button>
         <button class="btn btn-sm btn-outline" onclick="exportCSV()">📥 CSV</button>
         <button class="btn btn-sm btn-outline" onclick="window.print()">🖨</button>
       </div>
@@ -233,73 +289,188 @@ tbody td{padding:8px 12px;white-space:nowrap;color:var(--t2)}
 </div>
 
 <script>
-/* ═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   GLOBAL STATE
+   ═══════════════════════════════════════════ */
 let RAW=[],MAIN_DATA=[],EXCLUDED_SUPPLIERS=[],EXCLUDED_CODES=[],FILT=[],charts={};
 let CUR_PAGE='dashboard',PAGE_N=1,PG_SZ=50,SORT_F='date',SORT_D=-1;
+let PERIOD_MODE='all'; // all, 3m, 6m, 12m
+let FILT_STATE={year:'',season:'',month:'',category:'',group:''};
+
 const MO=['','فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const SEASONS=['بهار','تابستان','پاییز','زمستان'];
 const COLORS=['#6c5ce7','#00cec9','#fd79a8','#fdcb6e','#55efc4','#74b9ff','#e17055','#a29bfe','#fab1a0','#81ecec','#ffeaa7','#dfe6e9','#e84393','#0984e3','#00b894','#f39c12'];
 
-/* ═══ LOAD DATA ═══ */
-async function loadData(){
-  try{const r=await fetch('data.json');if(r.ok){processData(await r.json());return}}catch(e){}
-  try{const d=await new Promise((res,rej)=>{const x=new XMLHttpRequest();x.open('GET','data.json');x.onload=()=>(x.status===200||x.status===0)?res(JSON.parse(x.responseText)):rej();x.onerror=rej;x.send()});processData(d);return}catch(e){}
-  document.getElementById('loader').classList.add('h');
-  document.getElementById('uploadScr').classList.add('show');
-}
-document.getElementById('fileInp').addEventListener('change',function(e){
-  const f=e.target.files[0];if(!f)return;
-  const rd=new FileReader();
-  rd.onload=ev=>{try{processData(JSON.parse(ev.target.result))}catch(err){alert('خطا: '+err.message)}};
-  rd.readAsText(f);
-});
-document.querySelector('.up-drop').addEventListener('dragover',e=>e.preventDefault());
-document.querySelector('.up-drop').addEventListener('drop',e=>{
-  e.preventDefault();const f=e.dataTransfer.files[0];
-  if(f){const rd=new FileReader();rd.onload=ev=>{try{processData(JSON.parse(ev.target.result))}catch(err){alert('خطا: '+err.message)}};rd.readAsText(f)}
-});
+/* ═══════════════════════════════════════════
+   FILE LOADING - EXCEL & JSON
+   ═══════════════════════════════════════════ */
+document.getElementById('fileInp').addEventListener('change',handleFile);
+const dropZone=document.getElementById('dropZone');
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('dragover')});
+dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('dragover');if(e.dataTransfer.files.length)processFile(e.dataTransfer.files[0])});
 
-function findRecords(d){
-  if(Array.isArray(d)&&d.length&&typeof d[0]==='object'&&d[0].supplier!==undefined)return d;
-  if(typeof d==='object'){
-    for(const k of['records','data','rows','purchases'])
-      if(Array.isArray(d[k])&&d[k].length&&typeof d[k][0]==='object'&&d[k][0].supplier!==undefined)return d[k];
-    for(const k of Object.keys(d))
-      if(Array.isArray(d[k])&&d[k].length&&typeof d[k][0]==='object'&&d[k][0].supplier!==undefined&&d[k][0].total!==undefined)return d[k];
+function handleFile(e){if(e.target.files.length)processFile(e.target.files[0])}
+
+function processFile(file){
+  const ext=file.name.split('.').pop().toLowerCase();
+  const info=document.getElementById('fileInfo');
+  info.style.display='block';
+  info.innerHTML=`⏳ در حال پردازش <b>${file.name}</b>...`;
+
+  const reader=new FileReader();
+  
+  if(ext==='json'){
+    reader.onload=e=>{
+      try{
+        const data=JSON.parse(e.target.result);
+        info.innerHTML=`✅ فایل <b>${file.name}</b> با موفقیت بارگذاری شد!`;
+        setTimeout(()=>processData(data),500);
+      }catch(err){info.innerHTML=`❌ خطا: ${err.message}`;info.style.color='var(--a3)'}
+    };
+    reader.readAsText(file);
+  }else if(ext==='xlsx'||ext==='xls'){
+    reader.onload=e=>{
+      try{
+        const data=new Uint8Array(e.target.result);
+        const wb=XLSX.read(data,{type:'array'});
+        info.innerHTML=`✅ فایل <b>${file.name}</b> با موفقیت بارگذاری شد!`;
+        setTimeout(()=>processExcel(wb),500);
+      }catch(err){info.innerHTML=`❌ خطا: ${err.message}`;info.style.color='var(--a3)'}
+    };
+    reader.readAsArrayBuffer(file);
+  }else{
+    info.innerHTML='❌ فرمت فایل پشتیبانی نمی‌شود';
+    info.style.color='var(--a3)';
   }
-  return null;
+}
+
+function processExcel(wb){
+  // Try to find the main data sheet
+  const sheetNames=wb.SheetNames;
+  console.log('Sheets:',sheetNames);
+  
+  let records=[];
+  let excluded=[];
+  
+  // Look for main sheet (usually 'کلی' or 'main' or first sheet)
+  const mainSheetName=sheetNames.find(s=>s.includes('کلی')||s.includes('main')||s.includes('Main'))||sheetNames[0];
+  const ws=wb.Sheets[mainSheetName];
+  
+  if(ws){
+    const json=XLSX.utils.sheet_to_json(ws,{defval:''});
+    console.log(`Sheet "${mainSheetName}" rows:`,json.length);
+    
+    // Map Persian headers to standard fields
+    const headerMap={
+      'کد فروشنده':'supplierCode','supplierCode':'supplierCode',
+      'فروشنده':'supplier','نام فروشنده':'supplier','supplier':'supplier',
+      'فاکتور':'invoice','شماره فاکتور':'invoice','invoice':'invoice',
+      'تاریخ':'date','تاریخ فاکتور':'date','date':'date',
+      'کد کالا':'itemCode','کد آیتم':'itemCode','itemCode':'itemCode',
+      'شرح کالا':'item','شرح':'item','نام کالا':'item','item':'item',
+      'واحد':'unit','واحد شمارش':'unit','unit':'unit',
+      'پروژه':'project','طرح':'project','project':'project',
+      'یادداشت':'notes','توضیحات':'notes','شرح یادداشت':'notes','notes':'notes',
+      'تعداد':'qty','مقدار':'qty','تعداد/مقدار':'qty','qty':'qty',
+      'فی':'rate','قیمت فی':'rate','نرخ':'rate','rate':'rate',
+      'مبلغ':'amount','مبلغ کل':'amount','amount':'amount',
+      'تخفیف':'discount','تخفیف (ریال)':'discount','discount':'discount',
+      'مالیات':'vat','مالیات بر ارزش افزوده':'vat','vat':'vat',
+      'جمع کل':'total','جمع نهایی':'total','مبلغ نهایی':'total','total':'total',
+      'دسته‌بندی':'category','دسته':'category','گروه کالایی':'category','category':'category',
+      'گروه':'group','نوع':'group','کالا/خدمات':'group','group':'group',
+      'قیمت واحد':'unitPrice','unitPrice':'unitPrice'
+    };
+    
+    records=json.map(row=>{
+      const r={};
+      for(const[k,v]of Object.entries(row)){
+        const key=k.trim();
+        const mapped=headerMap[key]||headerMap[key.toLowerCase()]||key.toLowerCase();
+        r[mapped]=v;
+      }
+      // Ensure numeric fields
+      r.total=parseFloat(r.total)||0;
+      r.qty=parseFloat(r.qty)||0;
+      r.rate=parseFloat(r.rate)||0;
+      r.amount=parseFloat(r.amount)||0;
+      r.discount=parseFloat(r.discount)||0;
+      r.vat=parseFloat(r.vat)||0;
+      
+      // Parse date if needed
+      if(r.date&&!r.year){
+        const parts=String(r.date).split('/');
+        if(parts.length>=2){
+          r.year=parseInt(parts[0])||0;
+          r.month=parseInt(parts[1])||0;
+        }
+      }
+      
+      // Set season and period if not present
+      if(r.month&&!r.season){
+        r.season=r.month<=3?'بهار':r.month<=6?'تابستان':r.month<=9?'پاییز':'زمستان';
+      }
+      if(r.year&&r.season&&!r.period){
+        r.period=r.season+' '+r.year;
+      }
+      
+      return r;
+    }).filter(r=>r.total>0||r.supplier);
+  }
+  
+  processData({records,excludedSuppliers:excluded});
 }
 
 function processData(d){
-  // Extract excluded suppliers from data
+  // Extract excluded suppliers
   EXCLUDED_SUPPLIERS=[];
   EXCLUDED_CODES=[];
-  if(d&&typeof d==='object'&&!Array.isArray(d)){
+  if(d&&typeof d==='object'){
     if(Array.isArray(d.excludedSuppliers)){
       EXCLUDED_SUPPLIERS=d.excludedSuppliers;
-      EXCLUDED_CODES=EXCLUDED_SUPPLIERS.map(s=>String(s.code));
+      EXCLUDED_CODES=EXCLUDED_SUPPLIERS.map(s=>String(s.code||s.supplierCode||''));
     }
   }
 
-  RAW=(findRecords(d)||[]).filter(r=>r&&typeof r==='object').map(r=>({
+  // Find records
+  let records=[];
+  if(Array.isArray(d)){
+    records=d;
+  }else if(Array.isArray(d.records)){
+    records=d.records;
+  }else if(Array.isArray(d.data)){
+    records=d.data;
+  }else if(typeof d==='object'){
+    for(const k of Object.keys(d)){
+      if(Array.isArray(d[k])&&d[k].length&&typeof d[k][0]==='object'&&(d[k][0].supplier!==undefined||d[k][0]['فروشنده']!==undefined)){
+        records=d[k];break;
+      }
+    }
+  }
+
+  RAW=records.filter(r=>r&&typeof r==='object').map(r=>({
     ...r,
+    supplierCode:String(r.supplierCode||''),
     total:parseFloat(r.total)||0,
     qty:parseFloat(r.qty)||0,
     rate:parseFloat(r.rate)||0,
     amount:parseFloat(r.amount)||0,
+    discount:parseFloat(r.discount)||0,
+    vat:parseFloat(r.vat)||0,
     year:parseInt(r.year)||0,
-    month:parseInt(r.month)||0,
-    supplierCode:String(r.supplierCode||'')
+    month:parseInt(r.month)||0
   }));
 
-  // Separate main data (excluding excluded suppliers)
+  // Separate main data
   MAIN_DATA=RAW.filter(r=>!EXCLUDED_CODES.includes(r.supplierCode));
 
-  console.log(`✅ Total records: ${RAW.length}`);
-  console.log(`✅ Main data (excluded removed): ${MAIN_DATA.length}`);
-  console.log(`✅ Excluded suppliers: ${EXCLUDED_SUPPLIERS.length}`,EXCLUDED_SUPPLIERS);
+  console.log(`✅ Total: ${RAW.length}, Main: ${MAIN_DATA.length}, Excluded: ${EXCLUDED_SUPPLIERS.length}`);
 
-  if(!RAW.length){document.getElementById('loader').innerHTML='<div style="text-align:center;color:var(--a3)">⚠ داده‌ای یافت نشد</div>';return}
+  if(!RAW.length){
+    document.getElementById('loader').innerHTML='<div style="text-align:center;color:var(--a3)">⚠ داده‌ای یافت نشد</div>';
+    return;
+  }
 
   document.getElementById('loader').classList.add('h');
   document.getElementById('uploadScr').classList.remove('show');
@@ -308,12 +479,21 @@ function processData(d){
   renderPage('dashboard');
 }
 
-/* ═══ FILTERS ═══ */
-let FILT_STATE={year:'',season:'',month:'',category:'',group:''};
-
+/* ═══════════════════════════════════════════
+   FILTERS & HELPERS
+   ═══════════════════════════════════════════ */
 function applyFilters(){
-  // Always use MAIN_DATA (excluded suppliers removed)
-  FILT=MAIN_DATA.filter(r=>{
+  let data=MAIN_DATA;
+  
+  // Period filter
+  if(PERIOD_MODE!=='all'){
+    const maxMonthIndex=Math.max(...data.map(r=>r.monthIndex||0));
+    const months=PERIOD_MODE==='3m'?3:PERIOD_MODE==='6m'?6:12;
+    const cutoff=maxMonthIndex-months;
+    data=data.filter(r=>(r.monthIndex||0)>cutoff);
+  }
+  
+  FILT=data.filter(r=>{
     if(FILT_STATE.year&&r.year!=FILT_STATE.year)return false;
     if(FILT_STATE.season&&r.season!==FILT_STATE.season)return false;
     if(FILT_STATE.month&&r.month!=FILT_STATE.month)return false;
@@ -322,36 +502,53 @@ function applyFilters(){
     return true;
   });
 }
-function resetFilters(){FILT_STATE={year:'',season:'',month:'',category:'',group:''};applyFilters();renderPage(CUR_PAGE)}
 
-/* ═══ HELPERS ═══ */
+function resetFilters(){
+  FILT_STATE={year:'',season:'',month:'',category:'',group:''};
+  PERIOD_MODE='all';
+  applyFilters();
+  renderPage(CUR_PAGE);
+}
+
+function setF(k,v){FILT_STATE[k]=v;applyFilters();renderPage(CUR_PAGE)}
+function setPeriod(p){PERIOD_MODE=p;applyFilters();renderPage(CUR_PAGE)}
+
 const fmt=n=>n==null||isNaN(n)?'—':Math.round(n).toLocaleString('fa-IR');
 const fmtS=n=>{if(Math.abs(n)>=1e12)return(n/1e12).toFixed(1)+' ت';if(Math.abs(n)>=1e9)return(n/1e9).toFixed(1)+' م';if(Math.abs(n)>=1e6)return(n/1e6).toFixed(1)+' ه';return fmt(n)};
 const uniq=(arr,k)=>[...new Set(arr.map(r=>r[k]).filter(Boolean))].sort();
 const sum=(arr,k='total')=>arr.reduce((s,r)=>s+(r[k]||0),0);
 const groupBy=(arr,k)=>{const m={};arr.forEach(r=>{const v=r[k]||'نامشخص';if(!m[v])m[v]=[];m[v].push(r)});return m};
 const destroyC=()=>{Object.keys(charts).forEach(k=>{if(charts[k]){charts[k].destroy();delete charts[k]}})};
+const avg=(arr,k='total')=>arr.length?sum(arr,k)/arr.length:0;
 
 function filterBarHTML(){
   const years=uniq(MAIN_DATA,'year');
   const cats=uniq(MAIN_DATA,'category');
+  
   return `<div class="filters anim">
-    <div class="fg"><label>📅 سال</label><select id="fYear" onchange="setF('year',this.value)"><option value="">همه</option>${years.map(y=>`<option value="${y}" ${FILT_STATE.year==y?'selected':''}>${y}</option>`).join('')}</select></div>
-    <div class="fg"><label>🗓 فصل</label><select id="fSeason" onchange="setF('season',this.value)"><option value="">همه</option>${SEASONS.map(s=>`<option value="${s}" ${FILT_STATE.season===s?'selected':''}>${s}</option>`).join('')}</select></div>
-    <div class="fg"><label>📆 ماه</label><select id="fMonth" onchange="setF('month',this.value)"><option value="">همه</option>${MO.slice(1).map((m,i)=>`<option value="${i+1}" ${FILT_STATE.month==i+1?'selected':''}>${m}</option>`).join('')}</select></div>
-    <div class="fg"><label>📂 دسته‌بندی</label><select id="fCat" onchange="setF('category',this.value)"><option value="">همه</option>${cats.map(c=>`<option value="${c}" ${FILT_STATE.category===c?'selected':''}>${c}</option>`).join('')}</select></div>
+    <div class="fg"><label>📅 سال</label><select onchange="setF('year',this.value)"><option value="">همه</option>${years.map(y=>`<option value="${y}" ${FILT_STATE.year==y?'selected':''}>${y}</option>`).join('')}</select></div>
+    <div class="fg"><label>🗓 فصل</label><select onchange="setF('season',this.value)"><option value="">همه</option>${SEASONS.map(s=>`<option value="${s}" ${FILT_STATE.season===s?'selected':''}>${s}</option>`).join('')}</select></div>
+    <div class="fg"><label>📆 ماه</label><select onchange="setF('month',this.value)"><option value="">همه</option>${MO.slice(1).map((m,i)=>`<option value="${i+1}" ${FILT_STATE.month==i+1?'selected':''}>${m}</option>`).join('')}</select></div>
+    <div class="fg"><label>📂 دسته‌بندی</label><select onchange="setF('category',this.value)"><option value="">همه</option>${cats.map(c=>`<option value="${c}" ${FILT_STATE.category===c?'selected':''}>${c}</option>`).join('')}</select></div>
     <div class="fg"><label>🏷 گروه</label><div class="g-toggle">
       <button class="${FILT_STATE.group===''?'on-all':''}" onclick="setF('group','')">همه</button>
       <button class="${FILT_STATE.group==='کالا'?'on-goods':''}" onclick="setF('group','کالا')">🛒 کالا</button>
       <button class="${FILT_STATE.group==='خدمات'?'on-services':''}" onclick="setF('group','خدمات')">🔧 خدمات</button>
     </div></div>
-    <button class="btn btn-sm btn-outline" onclick="resetFilters()">↺ پاک‌سازی</button>
+    <div class="fg"><label>⏱ دوره</label><div class="period-btns">
+      <button class="period-btn ${PERIOD_MODE==='all'?'active':''}" onclick="setPeriod('all')">همه</button>
+      <button class="period-btn ${PERIOD_MODE==='3m'?'active':''}" onclick="setPeriod('3m')">۳ ماهه</button>
+      <button class="period-btn ${PERIOD_MODE==='6m'?'active':''}" onclick="setPeriod('6m')">۶ ماهه</button>
+      <button class="period-btn ${PERIOD_MODE==='12m'?'active':''}" onclick="setPeriod('12m')">۱۲ ماهه</button>
+    </div></div>
+    <button class="btn btn-sm btn-outline" onclick="resetFilters()">↺</button>
   </div>
-  ${EXCLUDED_CODES.length?`<div class="excluded-notice anim">⚠ ${EXCLUDED_CODES.length} فروشنده استثنا (${EXCLUDED_SUPPLIERS.map(s=>s.name).join('، ')}) از محاسبات حذف شده‌اند.</div>`:''}`;
+  ${EXCLUDED_CODES.length?`<div class="excluded-notice anim">⚠ ${EXCLUDED_SUPPLIERS.length} فروشنده استثنا (${EXCLUDED_SUPPLIERS.map(s=>s.name).join('، ')}) از محاسبات حذف شده‌اند.</div>`:''}`;
 }
-function setF(k,v){FILT_STATE[k]=v;applyFilters();renderPage(CUR_PAGE)}
 
-/* ═══ NAVIGATION ═══ */
+/* ═══════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════ */
 document.querySelectorAll('.nav-item').forEach(a=>{
   a.addEventListener('click',()=>{
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -361,7 +558,7 @@ document.querySelectorAll('.nav-item').forEach(a=>{
   });
 });
 
-const PAGE_TITLES={dashboard:'⌂ داشبورد',categories:'◈ تحلیل دسته‌ها',offices:'▤ دفتر خریدها',items:'◫ شناسنامه کالا / خدمت',dna:'◎ DNA فروشنده',compare:'⇄ مقایسه فروشندگان',price:'↕ تحلیل تغییر قیمت',whatif:'⚡ What-If',changed:'⟳ What Changed?',askdata:'! AskData',exceptions:'⚠ فروشندگان استثنا',search:'⌕ جستجوی پیشرفته',datacenter:'⇩ مرکز داده'};
+const PAGE_TITLES={dashboard:'⌂ داشبورد',categories:'◈ تحلیل دسته‌ها',offices:'▤ دفتر خریدها',items:'◫ شناسنامه کالا',dna:'◎ DNA فروشنده',compare:'⇄ مقایسه فروشندگان',price:'↕ تحلیل تغییر قیمت',whatif:'⚡ What-If',changed:'⟳ What Changed?',askdata:'! AskData',exceptions:'⚠ فروشندگان استثنا',search:'⌕ جستجوی پیشرفته',datacenter:'⇩ مرکز داده'};
 
 function renderPage(page){
   CUR_PAGE=page;destroyC();PAGE_N=1;
@@ -385,44 +582,100 @@ function renderPage(page){
   }
 }
 
-/* ═══ PAGE 1: DASHBOARD ═══ */
+/* ═══════════════════════════════════════════
+   PAGE 1: DASHBOARD (ENHANCED!)
+   ═══════════════════════════════════════════ */
 function renderDashboard(el){
   const total=sum(FILT);
   const suppliers=new Set(FILT.map(r=>r.supplier)).size;
-  const avg=FILT.length?total/FILT.length:0;
+  const avgVal=FILT.length?total/FILT.length:0;
   const goods=sum(FILT.filter(r=>r.group==='کالا'));
   const services=sum(FILT.filter(r=>r.group==='خدمات'));
   const catMap=groupBy(FILT,'category');
   const topCat=Object.entries(catMap).sort((a,b)=>sum(b[1])-sum(a[1]))[0];
-
+  
+  // Latest records
+  const sortedByDate=[...FILT].sort((a,b)=>(b.date||'').localeCompare(a.date||'','fa'));
+  const latestInvoice=sortedByDate[0];
+  const latestDate=latestInvoice?latestInvoice.date:'—';
+  
+  // Unique items
+  const uniqueItems=uniq(FILT,'item').length;
+  
   el.innerHTML=filterBarHTML()+`
+  <!-- KPIs -->
   <div class="kpis anim">
     <div class="kpi"><div class="kpi-ic">💰</div><div class="kpi-lb">مجموع خرید</div><div class="kpi-v">${fmtS(total)}</div><div class="kpi-sub">ریال</div></div>
     <div class="kpi"><div class="kpi-ic">📦</div><div class="kpi-lb">تعداد فاکتور</div><div class="kpi-v">${fmt(FILT.length)}</div><div class="kpi-sub">ردیف خرید</div></div>
     <div class="kpi"><div class="kpi-ic">🏢</div><div class="kpi-lb">فروشندگان</div><div class="kpi-v">${fmt(suppliers)}</div><div class="kpi-sub">فروشنده فعال</div></div>
-    <div class="kpi"><div class="kpi-ic">📊</div><div class="kpi-lb">میانگین خرید</div><div class="kpi-v">${fmtS(avg)}</div><div class="kpi-sub">ریال</div></div>
-    <div class="kpi"><div class="kpi-ic">🏆</div><div class="kpi-lb">بیشترین دسته</div><div class="kpi-v" style="font-size:.95rem">${topCat?topCat[0]:'—'}</div><div class="kpi-sub">${topCat?fmtS(sum(topCat[1]))+' ریال':''}</div></div>
+    <div class="kpi"><div class="kpi-ic">📊</div><div class="kpi-lb">میانگین خرید</div><div class="kpi-v">${fmtS(avgVal)}</div><div class="kpi-sub">ریال</div></div>
+    <div class="kpi"><div class="kpi-ic">🏆</div><div class="kpi-lb">بیشترین دسته</div><div class="kpi-v" style="font-size:.85rem">${topCat?topCat[0]:'—'}</div><div class="kpi-sub">${topCat?fmtS(sum(topCat[1]))+' ریال':''}</div></div>
     <div class="kpi"><div class="kpi-ic">⚖️</div><div class="kpi-lb">نسبت کالا/خدمات</div><div class="kpi-v">${services>0?(goods/services).toFixed(1):'∞'}</div><div class="kpi-sub">کالا به خدمات</div></div>
+    <div class="kpi"><div class="kpi-ic">📅</div><div class="kpi-lb">آخرین فاکتور</div><div class="kpi-v" style="font-size:.9rem">${latestDate}</div><div class="kpi-sub">${latestInvoice?latestInvoice.supplier:''}</div></div>
+    <div class="kpi"><div class="kpi-ic">📋</div><div class="kpi-lb">اقلام یکتا</div><div class="kpi-v">${fmt(uniqueItems)}</div><div class="kpi-sub">کالا/خدمت</div></div>
   </div>
+
+  <!-- Mini Stats -->
   <div class="stat-row anim">
     <div class="stat-mini"><div class="v">${fmtS(goods)}</div><div class="l">مبلغ کالا</div></div>
     <div class="stat-mini"><div class="v">${fmtS(services)}</div><div class="l">مبلغ خدمات</div></div>
-    <div class="stat-mini"><div class="v">${fmt(uniq(FILT,'category').length)}</div><div class="l">تعداد دسته‌ها</div></div>
-    <div class="stat-mini"><div class="v">${fmt(uniq(FILT,'item').length)}</div><div class="l">اقلام یکتا</div></div>
+    <div class="stat-mini"><div class="v">${fmt(uniq(FILT,'category').length)}</div><div class="l">دسته‌ها</div></div>
     <div class="stat-mini"><div class="v">${fmt(uniq(FILT,'project').length)}</div><div class="l">پروژه‌ها</div></div>
     <div class="stat-mini"><div class="v">${FILT.length?fmtS(Math.max(...FILT.map(r=>r.total))):'—'}</div><div class="l">بزرگترین خرید</div></div>
+    <div class="stat-mini"><div class="v">${fmt(sum(FILT,'discount'))}</div><div class="l">مجموع تخفیف</div></div>
   </div>
+
+  <!-- Charts -->
   <div class="grid-2 anim">
-    <div class="card"><div class="card-head"><h3><span style="color:var(--a1)">●</span> روند خرید ماهانه</h3></div><div class="card-body"><canvas id="chMonthly"></canvas></div></div>
-    <div class="card"><div class="card-head"><h3><span style="color:var(--a2)">●</span> تفکیک کالا و خدمات</h3></div><div class="card-body" style="max-width:300px;margin:0 auto"><canvas id="chGroup"></canvas></div></div>
-    <div class="card"><div class="card-head"><h3><span style="color:var(--a3)">●</span> سهم دسته‌بندی‌ها</h3></div><div class="card-body"><canvas id="chCategory"></canvas></div></div>
-    <div class="card"><div class="card-head"><h3><span style="color:var(--a4)">●</span> ۱۰ فروشنده برتر</h3></div><div class="card-body"><ul class="top-list" id="topSup"></ul></div></div>
-    <div class="card wide"><div class="card-head"><h3><span style="color:var(--a5)">●</span> مقایسه فصلی کالا و خدمات</h3></div><div class="card-body"><canvas id="chSeasonal"></canvas></div></div>
+    <div class="card"><div class="card-head"><h3><span style="color:var(--a1)">●</span> روند خرید ماهانه</h3>
+      <div class="period-btns">
+        <button class="period-btn ${PERIOD_MODE==='all'?'active':''}" onclick="setPeriod('all')">همه</button>
+        <button class="period-btn ${PERIOD_MODE==='3m'?'active':''}" onclick="setPeriod('3m')">۳ ماهه</button>
+        <button class="period-btn ${PERIOD_MODE==='6m'?'active':''}" onclick="setPeriod('6m')">۶ ماهه</button>
+        <button class="period-btn ${PERIOD_MODE==='12m'?'active':''}" onclick="setPeriod('12m')">۱۲ ماهه</button>
+      </div>
+    </div><div class="card-body"><canvas id="chMonthly"></canvas></div></div>
+    
+    <div class="card"><div class="card-head"><h3><span style="color:var(--a2)">●</span> تفکیک کالا و خدمات</h3></div>
+    <div class="card-body" style="max-width:300px;margin:0 auto"><canvas id="chGroup"></canvas></div></div>
+    
+    <div class="card"><div class="card-head"><h3><span style="color:var(--a3)">●</span> سهم دسته‌بندی‌ها</h3></div>
+    <div class="card-body"><canvas id="chCategory"></canvas></div></div>
+    
+    <div class="card"><div class="card-head"><h3><span style="color:var(--a4)">●</span> ۱۰ فروشنده برتر</h3></div>
+    <div class="card-body"><ul class="top-list" id="topSup"></ul></div></div>
+    
+    <div class="card wide"><div class="card-head"><h3><span style="color:var(--a5)">●</span> مقایسه فصلی کالا و خدمات</h3></div>
+    <div class="card-body"><canvas id="chSeasonal"></canvas></div></div>
   </div>
+
+  <!-- Latest Invoices -->
+  <div class="card anim mb">
+    <div class="card-head"><h3>🕐 آخرین فاکتورها</h3></div>
+    <div class="card-body np"><div class="tbl-wrap" style="max-height:250px"><table><thead><tr>
+      <th>تاریخ</th><th>فروشنده</th><th>شرح</th><th>دسته</th><th>مبلغ</th>
+    </tr></thead><tbody>
+    ${sortedByDate.slice(0,10).map(r=>`<tr>
+      <td>${r.date||'—'}</td><td>${r.supplier||'—'}</td><td>${r.item||'—'}</td>
+      <td><span class="badge badge-cat">${r.category||'—'}</span></td>
+      <td style="font-weight:700;color:var(--a2)">${fmt(r.total)}</td></tr>`).join('')}
+    </tbody></table></div></div>
+  </div>
+
+  <!-- Full Table -->
   <div class="card anim">
-    <div class="card-head"><h3>📋 جزئیات خریدها</h3><input type="text" id="dashSearch" placeholder="🔍 جستجو..." style="padding:7px 12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--rx);color:var(--t1);font-family:inherit;font-size:.78rem;outline:none;width:200px" oninput="renderDashTable()"></div>
+    <div class="card-head"><h3>📋 جزئیات خریدها</h3>
+    <input type="text" id="dashSearch" placeholder="🔍 جستجو..." style="padding:7px 12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--rx);color:var(--t1);font-family:inherit;font-size:.75rem;outline:none;width:180px" oninput="renderDashTable()"></div>
     <div class="card-body np"><div class="tbl-wrap"><table><thead><tr>
-      <th>تاریخ</th><th>فروشنده</th><th>شرح</th><th>دسته</th><th>گروه</th><th>پروژه</th><th>تعداد</th><th>فی</th><th>مبلغ کل</th>
+      <th onclick="SORT_F='date';SORT_D*=-1;renderDashTable()">تاریخ ↕</th>
+      <th onclick="SORT_F='supplier';SORT_D*=-1;renderDashTable()">فروشنده ↕</th>
+      <th onclick="SORT_F='item';SORT_D*=-1;renderDashTable()">شرح ↕</th>
+      <th onclick="SORT_F='category';SORT_D*=-1;renderDashTable()">دسته ↕</th>
+      <th onclick="SORT_F='group';SORT_D*=-1;renderDashTable()">گروه ↕</th>
+      <th onclick="SORT_F='project';SORT_D*=-1;renderDashTable()">پروژه ↕</th>
+      <th onclick="SORT_F='qty';SORT_D*=-1;renderDashTable()">تعداد ↕</th>
+      <th onclick="SORT_F='rate';SORT_D*=-1;renderDashTable()">فی ↕</th>
+      <th onclick="SORT_F='total';SORT_D*=-1;renderDashTable()">مبلغ کل ↕</th>
     </tr></thead><tbody id="dashTbl"></tbody></table></div></div>
     <div class="tbl-footer"><span id="dashInfo"></span><div class="pagination" id="dashPag"></div></div>
   </div>`;
@@ -451,17 +704,62 @@ function renderDashTable(){
 }
 
 function drawDashCharts(total,goods,services){
-  const monthly={};FILT.forEach(r=>{const k=r.year+'/'+String(r.month).padStart(2,'0');monthly[k]=(monthly[k]||0)+(r.total||0)});
+  // Monthly chart with period filter
+  const monthly={};
+  FILT.forEach(r=>{
+    const k=r.year+'/'+String(r.month).padStart(2,'0');
+    monthly[k]=(monthly[k]||0)+(r.total||0);
+  });
   const sorted=Object.entries(monthly).sort((a,b)=>a[0].localeCompare(b[0]));
 
-  charts.monthly=new Chart(document.getElementById('chMonthly'),{type:'line',data:{labels:sorted.map(([k])=>{const[y,m]=k.split('/');return MO[+m]+' '+y}),datasets:[{data:sorted.map(([,v])=>v),borderColor:'#6c5ce7',backgroundColor:'rgba(108,92,231,.1)',fill:true,tension:.4,pointRadius:3,pointHoverRadius:6,borderWidth:2}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:9},maxRotation:45},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:9},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,.03)'}}}}});
+  charts.monthly=new Chart(document.getElementById('chMonthly'),{
+    type:'line',
+    data:{
+      labels:sorted.map(([k])=>{const[y,m]=k.split('/');return MO[+m]+' '+y}),
+      datasets:[{
+        data:sorted.map(([,v])=>v),
+        borderColor:'#6c5ce7',
+        backgroundColor:'rgba(108,92,231,.1)',
+        fill:true,
+        tension:.4,
+        pointRadius:4,
+        pointHoverRadius:7,
+        pointBackgroundColor:'#6c5ce7',
+        pointBorderColor:'#fff',
+        pointBorderWidth:2,
+        borderWidth:2.5
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>fmt(c.raw)+' ریال'}}
+      },
+      scales:{
+        x:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:9},maxRotation:45},grid:{color:'rgba(255,255,255,.03)'}},
+        y:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:9},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,.03)'}}
+      }
+    }
+  });
 
-  charts.group=new Chart(document.getElementById('chGroup'),{type:'doughnut',data:{labels:['کالا','خدمات'],datasets:[{data:[goods,services],backgroundColor:['#00cec9','#fd79a8'],borderWidth:0,hoverOffset:8}]},options:{responsive:true,cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#8888a8',font:{family:'Vazirmatn',size:11},usePointStyle:true}},tooltip:{callbacks:{label:c=>c.label+': '+fmt(c.raw)+' ریال'}}}}});
+  // Group donut
+  charts.group=new Chart(document.getElementById('chGroup'),{
+    type:'doughnut',
+    data:{labels:['کالا','خدمات'],datasets:[{data:[goods,services],backgroundColor:['#00cec9','#fd79a8'],borderWidth:0,hoverOffset:8}]},
+    options:{responsive:true,cutout:'65%',plugins:{legend:{position:'bottom',labels:{color:'#8888a8',font:{family:'Vazirmatn',size:11},usePointStyle:true}},tooltip:{callbacks:{label:c=>c.label+': '+fmt(c.raw)+' ریال'}}}}
+  });
 
+  // Category bar
   const catMap=groupBy(FILT,'category');
   const catSorted=Object.entries(catMap).sort((a,b)=>sum(b[1])-sum(a[1])).slice(0,12);
-  charts.category=new Chart(document.getElementById('chCategory'),{type:'bar',data:{labels:catSorted.map(([k])=>k),datasets:[{data:catSorted.map(([,v])=>sum(v)),backgroundColor:COLORS.slice(0,catSorted.length).map(c=>c+'99'),borderColor:COLORS.slice(0,catSorted.length),borderWidth:1,borderRadius:5}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:9},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#8888a8',font:{family:'Vazirmatn',size:9}},grid:{display:false}}}}});
+  charts.category=new Chart(document.getElementById('chCategory'),{
+    type:'bar',
+    data:{labels:catSorted.map(([k])=>k),datasets:[{data:catSorted.map(([,v])=>sum(v)),backgroundColor:COLORS.slice(0,catSorted.length).map(c=>c+'99'),borderColor:COLORS.slice(0,catSorted.length),borderWidth:1,borderRadius:5}]},
+    options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:9},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#8888a8',font:{family:'Vazirmatn',size:9}},grid:{display:false}}}}
+  });
 
+  // Top suppliers
   const supMap=groupBy(FILT,'supplier');
   const supSorted=Object.entries(supMap).sort((a,b)=>sum(b[1])-sum(a[1])).slice(0,10);
   const maxV=supSorted.length?sum(supSorted[0][1]):1;
@@ -470,12 +768,22 @@ function drawDashCharts(total,goods,services){
     return`<li><span class="top-rank ${i<3?['r1','r2','r3'][i]:'rn'}">${i+1}</span><span class="top-name">${name}</span><div class="top-bar"><div class="top-bar-fill" style="width:${pct}%"></div></div><span class="top-amount">${fmtS(v)}</span></li>`;
   }).join('');
 
+  // Seasonal
   const gS=SEASONS.map(s=>sum(FILT.filter(r=>r.season===s&&r.group==='کالا')));
   const sS=SEASONS.map(s=>sum(FILT.filter(r=>r.season===s&&r.group==='خدمات')));
-  charts.seasonal=new Chart(document.getElementById('chSeasonal'),{type:'bar',data:{labels:SEASONS,datasets:[{label:'کالا',data:gS,backgroundColor:'rgba(0,206,201,.6)',borderColor:'#00cec9',borderWidth:1,borderRadius:5},{label:'خدمات',data:sS,backgroundColor:'rgba(253,121,168,.6)',borderColor:'#fd79a8',borderWidth:1,borderRadius:5}]},options:{responsive:true,plugins:{legend:{labels:{color:'#8888a8',font:{family:'Vazirmatn',size:11},usePointStyle:true}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{color:'#8888a8',font:{family:'Vazirmatn',size:11}},grid:{display:false}},y:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:9},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,.03)'}}}}});
+  charts.seasonal=new Chart(document.getElementById('chSeasonal'),{
+    type:'bar',
+    data:{labels:SEASONS,datasets:[
+      {label:'کالا',data:gS,backgroundColor:'rgba(0,206,201,.6)',borderColor:'#00cec9',borderWidth:1,borderRadius:5},
+      {label:'خدمات',data:sS,backgroundColor:'rgba(253,121,168,.6)',borderColor:'#fd79a8',borderWidth:1,borderRadius:5}
+    ]},
+    options:{responsive:true,plugins:{legend:{labels:{color:'#8888a8',font:{family:'Vazirmatn',size:11},usePointStyle:true}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{color:'#8888a8',font:{family:'Vazirmatn',size:11}},grid:{display:false}},y:{ticks:{color:'#55556a',font:{family:'Vazirmatn',size:9},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,.03)'}}}}
+  });
 }
 
-/* ═══ PAGE 2: CATEGORIES ═══ */
+/* ═══════════════════════════════════════════
+   PAGE 2: CATEGORIES
+   ═══════════════════════════════════════════ */
 function renderCategories(el){
   const catMap=groupBy(FILT,'category');
   const sorted=Object.entries(catMap).sort((a,b)=>sum(b[1])-sum(a[1]));
@@ -483,13 +791,13 @@ function renderCategories(el){
 
   el.innerHTML=filterBarHTML()+`
   <div class="grid-2 anim">
-    <div class="card"><div class="card-head"><h3>🥧 سهم دسته‌ها از کل</h3></div><div class="card-body"><canvas id="chCatPie"></canvas></div></div>
+    <div class="card"><div class="card-head"><h3>🥧 سهم دسته‌ها</h3></div><div class="card-body"><canvas id="chCatPie"></canvas></div></div>
     <div class="card"><div class="card-head"><h3>📊 مقایسه دسته‌ها</h3></div><div class="card-body"><canvas id="chCatBar"></canvas></div></div>
   </div>
   <div class="card anim">
     <div class="card-head"><h3>📋 خلاصه دسته‌بندی‌ها (${fmt(sorted.length)} دسته)</h3></div>
     <div class="card-body np"><div class="tbl-wrap"><table><thead><tr>
-      <th>دسته‌بندی</th><th>گروه</th><th>تعداد خرید</th><th>تعداد فروشنده</th><th>تعداد اقلام</th><th>مبلغ کل</th><th>سهم از کل</th><th>میانگین</th>
+      <th>دسته‌بندی</th><th>گروه</th><th>تعداد خرید</th><th>فروشندگان</th><th>اقلام</th><th>مبلغ کل</th><th>سهم</th><th>میانگین</th>
     </tr></thead><tbody>
     ${sorted.map(([cat,recs])=>{
       const t=sum(recs),pct=totalAll>0?(t/totalAll*100).toFixed(1):'0';
@@ -498,7 +806,7 @@ function renderCategories(el){
       <td>${grp}</td><td>${fmt(recs.length)}</td><td>${fmt(new Set(recs.map(r=>r.supplier)).size)}</td>
       <td>${fmt(new Set(recs.map(r=>r.item)).size)}</td>
       <td style="font-weight:700;color:var(--a2)">${fmt(t)}</td>
-      <td><div class="prog" style="width:100px"><div class="prog-fill" style="width:${pct}%;background:linear-gradient(135deg,#6c5ce7,#a855f7)"></div></div><span style="font-size:.65rem">${pct}%</span></td>
+      <td><div class="prog" style="width:100px;display:inline-block"><div class="prog-fill" style="width:${pct}%;background:linear-gradient(135deg,#6c5ce7,#a855f7)"></div></div> <span style="font-size:.6rem">${pct}%</span></td>
       <td>${fmtS(t/recs.length)}</td></tr>`;
     }).join('')}
     </tbody></table></div></div>
@@ -509,12 +817,14 @@ function renderCategories(el){
   charts.catBar=new Chart(document.getElementById('chCatBar'),{type:'bar',data:{labels:sorted.map(([k])=>k),datasets:[{data:sorted.map(([,v])=>sum(v)),backgroundColor:COLORS.slice(0,sorted.length).map(c=>c+'88'),borderColor:COLORS.slice(0,sorted.length),borderWidth:1,borderRadius:5}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{callback:v=>fmtS(v),color:'#55556a',font:{family:'Vazirmatn',size:9}},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#8888a8',font:{family:'Vazirmatn',size:9}},grid:{display:false}}}}});
 }
 
-/* ═══ PAGE 3: OFFICES ═══ */
+/* ═══════════════════════════════════════════
+   PAGE 3: OFFICES
+   ═══════════════════════════════════════════ */
 function renderOffices(el){
   el.innerHTML=filterBarHTML()+`
   <div class="card anim">
     <div class="card-head"><h3>▤ دفتر خریدها (${fmt(FILT.length)} ردیف)</h3>
-    <input type="text" id="offSearch" placeholder="🔍 جستجو..." style="padding:7px 12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--rx);color:var(--t1);font-family:inherit;font-size:.78rem;outline:none;width:200px" oninput="renderOffTable()"></div>
+    <input type="text" id="offSearch" placeholder="🔍 جستجو..." style="padding:7px 12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--rx);color:var(--t1);font-family:inherit;font-size:.75rem;outline:none;width:180px" oninput="renderOffTable()"></div>
     <div class="card-body np"><div class="tbl-wrap" style="max-height:550px"><table><thead><tr>
       <th>تاریخ</th><th>فروشنده</th><th>شرح</th><th>دسته</th><th>گروه</th><th>پروژه</th><th>واحد</th><th>تعداد</th><th>فی</th><th>تخفیف</th><th>مالیات</th><th>مبلغ کل</th><th>یادداشت</th>
     </tr></thead><tbody id="offTbl"></tbody></table></div></div>
@@ -535,7 +845,7 @@ function renderOffTable(){
     <td>${r.project||'—'}</td><td>${r.unit||'—'}</td><td>${fmt(r.qty)}</td><td>${fmt(r.rate)}</td>
     <td>${r.discount?fmt(r.discount):'—'}</td><td>${r.vat?fmt(r.vat):'—'}</td>
     <td style="font-weight:700;color:var(--a2)">${fmt(r.total)}</td>
-    <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;font-size:.68rem">${r.notes||'—'}</td></tr>`).join('');
+    <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;font-size:.65rem">${r.notes||'—'}</td></tr>`).join('');
   document.getElementById('offInfo').textContent=`${fmt(st+1)} تا ${fmt(Math.min(st+PG_SZ,data.length))} از ${fmt(data.length)}`;
   let h=`<button ${PAGE_N===1?'disabled':''} onclick="PAGE_N--;renderOffTable()">‹</button>`;
   for(let i=Math.max(1,PAGE_N-2);i<=Math.min(tp,PAGE_N+2);i++)h+=`<button class="${i===PAGE_N?'active':''}" onclick="PAGE_N=${i};renderOffTable()">${i}</button>`;
@@ -543,7 +853,9 @@ function renderOffTable(){
   document.getElementById('offPag').innerHTML=h;
 }
 
-/* ═══ PAGE 4: ITEMS ═══ */
+/* ═══════════════════════════════════════════
+   PAGE 4: ITEMS
+   ═══════════════════════════════════════════ */
 let SEL_ITEM='';
 function renderItems(el){
   const items=uniq(FILT,'item');
@@ -556,7 +868,9 @@ function renderItems(el){
     <div class="card"><div class="card-head"><h3>🔍 انتخاب کالا / خدمت</h3></div>
     <div class="card-body">
       <div class="search-box" style="margin-bottom:12px"><span class="si">⌕</span><input type="text" id="itemSearch" placeholder="جستجوی کالا..." oninput="filterItemList()"></div>
-      <div class="sel-list" id="itemList">${items.map(it=>`<div class="sel-item ${it===SEL_ITEM?'active':''}" onclick="SEL_ITEM='${it.replace(/'/g,"\\'")}';PAGE_N=1;renderPage('items')"><span>${it}</span><span class="val">${fmt(FILT.filter(r=>r.item===it).length)} خرید</span></div>`).join('')}</div>
+      <div style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--rs);padding:8px">
+      ${items.map(it=>`<div style="padding:8px 12px;border-radius:var(--rx);cursor:pointer;transition:all .2s;font-size:.75rem;color:${it===SEL_ITEM?'var(--a1)':'var(--t2)'};display:flex;justify-content:space-between;align-items:center;${it===SEL_ITEM?'background:rgba(108,92,231,.12)':''}" onclick="SEL_ITEM='${it.replace(/'/g,"\\'")}';renderPage('items')"><span>${it}</span><span style="font-size:.65rem;color:var(--t3)">${fmt(FILT.filter(r=>r.item===it).length)} خرید</span></div>`).join('')}
+      </div>
     </div></div>
     <div class="card"><div class="card-head"><h3>◫ شناسنامه: ${SEL_ITEM||'—'}</h3></div>
     <div class="card-body">
@@ -566,10 +880,10 @@ function renderItems(el){
         <div class="stat-mini"><div class="v">${fmt(suppliers.length)}</div><div class="l">فروشنده</div></div>
         <div class="stat-mini"><div class="v">${itemRecs.length?fmt(Math.max(...itemRecs.map(r=>r.rate))):'—'}</div><div class="l">بالاترین قیمت</div></div>
         <div class="stat-mini"><div class="v">${itemRecs.length?fmt(Math.min(...itemRecs.map(r=>r.rate))):'—'}</div><div class="l">پایین‌ترین قیمت</div></div>
-        <div class="stat-mini"><div class="v">${itemRecs.length?fmt(sum(itemRecs)/itemRecs.length):'—'}</div><div class="l">میانگین قیمت</div></div>
+        <div class="stat-mini"><div class="v">${itemRecs.length?fmt(avg(itemRecs,'rate')):'—'}</div><div class="l">میانگین قیمت</div></div>
       </div>
       <canvas id="chItemHistory" height="200"></canvas>
-      <div style="margin-top:14px"><h4 style="font-size:.8rem;margin-bottom:8px">فروشندگان:</h4>
+      <div style="margin-top:14px"><h4 style="font-size:.75rem;margin-bottom:8px">فروشندگان:</h4>
       ${suppliers.map(s=>`<span class="tag">${s}</span>`).join('')||'<span style="color:var(--t3)">—</span>'}
       </div>
     </div></div>
@@ -592,10 +906,12 @@ function renderItems(el){
 }
 function filterItemList(){
   const q=document.getElementById('itemSearch').value.trim().toLowerCase();
-  document.querySelectorAll('#itemList .sel-item').forEach(el=>{el.style.display=el.textContent.toLowerCase().includes(q)?'':'none'});
+  document.querySelectorAll('[onclick*="SEL_ITEM"]').forEach(el=>{el.style.display=el.textContent.toLowerCase().includes(q)?'':'none'});
 }
 
-/* ═══ PAGE 5: DNA SUPPLIER ═══ */
+/* ═══════════════════════════════════════════
+   PAGE 5: DNA SUPPLIER
+   ═══════════════════════════════════════════ */
 let SEL_SUP='';
 function renderDNA(el){
   const sups=uniq(FILT,'supplier');
@@ -609,7 +925,9 @@ function renderDNA(el){
     <div class="card"><div class="card-head"><h3>🏢 انتخاب فروشنده</h3></div>
     <div class="card-body">
       <div class="search-box" style="margin-bottom:12px"><span class="si">⌕</span><input type="text" id="supSearch" placeholder="جستجوی فروشنده..." oninput="filterSupList()"></div>
-      <div class="sel-list" id="supList">${sups.map(s=>`<div class="sel-item ${s===SEL_SUP?'active':''}" onclick="SEL_SUP='${s.replace(/'/g,"\\'")}';PAGE_N=1;renderPage('dna')"><span>${s}</span><span class="val">${fmtS(sum(FILT.filter(r=>r.supplier===s)))}</span></div>`).join('')}</div>
+      <div style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--rs);padding:8px">
+      ${sups.map(s=>`<div style="padding:8px 12px;border-radius:var(--rx);cursor:pointer;transition:all .2s;font-size:.75rem;color:${s===SEL_SUP?'var(--a1)':'var(--t2)'};display:flex;justify-content:space-between;align-items:center;${s===SEL_SUP?'background:rgba(108,92,231,.12)':''}" onclick="SEL_SUP='${s.replace(/'/g,"\\'")}';renderPage('dna')"><span>${s}</span><span style="font-size:.65rem;color:var(--t3)">${fmtS(sum(FILT.filter(r=>r.supplier===s)))}</span></div>`).join('')}
+      </div>
     </div></div>
     <div class="card"><div class="card-head"><h3>◎ DNA فروشنده: ${SEL_SUP||'—'}</h3></div>
     <div class="card-body">
@@ -621,9 +939,9 @@ function renderDNA(el){
         <div class="stat-mini"><div class="v">${supRecs.length?fmtS(totalSup/supRecs.length):'—'}</div><div class="l">میانگین خرید</div></div>
         <div class="stat-mini"><div class="v">${supRecs.length?supRecs[supRecs.length-1].date:'—'}</div><div class="l">آخرین خرید</div></div>
       </div>
-      <div style="margin-bottom:14px"><h4 style="font-size:.8rem;margin-bottom:8px">دسته‌بندی‌ها:</h4>
+      <div style="margin-bottom:14px"><h4 style="font-size:.75rem;margin-bottom:8px">دسته‌بندی‌ها:</h4>
       ${Object.entries(cats).sort((a,b)=>sum(b[1])-sum(a[1])).map(([c,recs])=>`
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:.78rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:.75rem">
           <span>${c}</span><span style="color:var(--a2);font-weight:600">${fmtS(sum(recs))}</span>
         </div>
         <div class="prog" style="margin-bottom:10px"><div class="prog-fill" style="width:${totalSup>0?(sum(recs)/totalSup*100):0}%;background:linear-gradient(135deg,#6c5ce7,#a855f7)"></div></div>
@@ -652,10 +970,12 @@ function renderDNA(el){
 }
 function filterSupList(){
   const q=document.getElementById('supSearch').value.trim().toLowerCase();
-  document.querySelectorAll('#supList .sel-item').forEach(el=>{el.style.display=el.textContent.toLowerCase().includes(q)?'':'none'});
+  document.querySelectorAll('[onclick*="SEL_SUP"]').forEach(el=>{el.style.display=el.textContent.toLowerCase().includes(q)?'':'none'});
 }
 
-/* ═══ PAGE 6: COMPARE ═══ */
+/* ═══════════════════════════════════════════
+   PAGE 6: COMPARE
+   ═══════════════════════════════════════════ */
 function renderCompare(el){
   const supMap=groupBy(FILT,'supplier');
   const sorted=Object.entries(supMap).sort((a,b)=>sum(b[1])-sum(a[1])).slice(0,20);
@@ -669,7 +989,7 @@ function renderCompare(el){
   <div class="card anim">
     <div class="card-head"><h3>⇄ جدول مقایسه فروشندگان</h3></div>
     <div class="card-body np"><div class="tbl-wrap"><table><thead><tr>
-      <th>#</th><th>فروشنده</th><th>تعداد تراکنش</th><th>مبلغ کل</th><th>میانگین</th><th>بزرگترین</th><th>تنوع اقلام</th><th>تنوع دسته</th><th>سهم</th>
+      <th>#</th><th>فروشنده</th><th>تراکنش</th><th>مبلغ کل</th><th>میانگین</th><th>بزرگترین</th><th>اقلام</th><th>دسته‌ها</th><th>سهم</th>
     </tr></thead><tbody>
     ${sorted.map(([name,recs],i)=>{
       const t=sum(recs);
@@ -686,7 +1006,9 @@ function renderCompare(el){
   charts.comparePie=new Chart(document.getElementById('chComparePie'),{type:'doughnut',data:{labels:sorted.slice(0,8).map(([k])=>k),datasets:[{data:sorted.slice(0,8).map(([,v])=>sum(v)),backgroundColor:COLORS.slice(0,8),borderWidth:0}]},options:{responsive:true,cutout:'55%',plugins:{legend:{position:'left',labels:{color:'#8888a8',font:{family:'Vazirmatn',size:9},usePointStyle:true}},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ریال'}}}}});
 }
 
-/* ═══ PAGE 7: PRICE ANALYSIS ═══ */
+/* ═══════════════════════════════════════════
+   PAGE 7: PRICE ANALYSIS
+   ═══════════════════════════════════════════ */
 function renderPrice(el){
   const itemMap=groupBy(FILT,'item');
   const priceData=[];
@@ -711,7 +1033,7 @@ function renderPrice(el){
   <div class="card anim">
     <div class="card-head"><h3>↕ تحلیل تغییر قیمت اقلام (۲ خرید به بالا)</h3></div>
     <div class="card-body np"><div class="tbl-wrap" style="max-height:500px"><table><thead><tr>
-      <th>کالا / خدمت</th><th>تعداد خرید</th><th>اولین قیمت</th><th>آخرین قیمت</th><th>تغییر</th><th>درصد تغییر</th><th>حداقل</th><th>حداکثر</th><th>نمودار</th>
+      <th>کالا / خدمت</th><th>خرید</th><th>اولین قیمت</th><th>آخرین قیمت</th><th>تغییر</th><th>درصد</th><th>حداقل</th><th>حداکثر</th><th>نمودار</th>
     </tr></thead><tbody>
     ${priceData.map(p=>{
       const cls=p.change>0?'price-up':p.change<0?'price-down':'price-same';
@@ -727,7 +1049,9 @@ function renderPrice(el){
   </div>`;
 }
 
-/* ═══ PAGE 8: WHAT-IF ═══ */
+/* ═══════════════════════════════════════════
+   PAGE 8: WHAT-IF
+   ═══════════════════════════════════════════ */
 function renderWhatIf(el){
   const total=sum(FILT);
   const goods=sum(FILT.filter(r=>r.group==='کالا'));
@@ -741,9 +1065,9 @@ function renderWhatIf(el){
       <div class="slider-group"><label><span>درصد تغییر قیمت خدمات</span><span id="wifPctServices">0%</span></label><input type="range" id="wifServices" min="-50" max="100" value="0" oninput="updateWhatIf()"></div>
       <div class="slider-group"><label><span>درصد تغییر تعداد خرید</span><span id="wifPctCount">0%</span></label><input type="range" id="wifCount" min="-50" max="50" value="0" oninput="updateWhatIf()"></div>
       <div class="result-box">
-        <div style="font-size:.78rem;color:var(--t2);margin-bottom:6px">نتیجه شبیه‌سازی:</div>
+        <div style="font-size:.75rem;color:var(--t2);margin-bottom:6px">نتیجه شبیه‌سازی:</div>
         <div class="big" id="wifResult">${fmtS(total)}</div>
-        <div style="font-size:.75rem;color:var(--t2);margin-top:6px" id="wifDiff"></div>
+        <div style="font-size:.72rem;color:var(--t2);margin-top:6px" id="wifDiff"></div>
       </div>
     </div></div>
     <div class="card"><div class="card-head"><h3>📊 مقایسه سناریو</h3></div><div class="card-body"><canvas id="chWhatIf"></canvas></div></div>
@@ -778,7 +1102,9 @@ function updateWhatIf(){
   }
 }
 
-/* ═══ PAGE 9: WHAT CHANGED ═══ */
+/* ═══════════════════════════════════════════
+   PAGE 9: WHAT CHANGED
+   ═══════════════════════════════════════════ */
 function renderChanged(el){
   const periods=uniq(FILT,'period');
   el.innerHTML=filterBarHTML()+`
@@ -843,7 +1169,9 @@ function updateChanged(){
     </tbody></table></div></div>`;
 }
 
-/* ═══ PAGE 10: ASK DATA ═══ */
+/* ═══════════════════════════════════════════
+   PAGE 10: ASK DATA
+   ═══════════════════════════════════════════ */
 function renderAskData(el){
   el.innerHTML=filterBarHTML()+`
   <div class="card anim" style="margin-bottom:20px">
@@ -866,8 +1194,8 @@ function askQuestion(q){
   switch(q){
     case 'بیشترین خرید در کدام دسته است؟':
       answer=`<div class="card"><div class="card-head"><h3>📊 پاسخ</h3></div><div class="card-body">
-        <p style="font-size:1rem;margin-bottom:16px">بیشترین خرید در دسته <b style="color:var(--a1)">«${catSorted[0]?catSorted[0][0]:'—'}»</b> با مبلغ <b style="color:var(--a2)">${fmtS(sum(catSorted[0][1]))} ریال</b></p>
-        ${catSorted.slice(0,5).map(([c,recs],i)=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:.82rem"><span>${i+1}. ${c}</span><span style="color:var(--a2);font-weight:600">${fmtS(sum(recs))}</span></div>`).join('')}
+        <p style="font-size:.95rem;margin-bottom:16px">بیشترین خرید در دسته <b style="color:var(--a1)">«${catSorted[0]?catSorted[0][0]:'—'}»</b> با مبلغ <b style="color:var(--a2)">${fmtS(sum(catSorted[0][1]))} ریال</b></p>
+        ${catSorted.slice(0,5).map(([c,recs],i)=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:.8rem"><span>${i+1}. ${c}</span><span style="color:var(--a2);font-weight:600">${fmtS(sum(recs))}</span></div>`).join('')}
       </div></div>`;break;
     case '۵ فروشنده برتر کدامند؟':
       answer=`<div class="card"><div class="card-head"><h3>🏆 پاسخ</h3></div><div class="card-body">
@@ -875,25 +1203,25 @@ function askQuestion(q){
       </div></div>`;break;
     case 'مجموع خرید کالا چقدر است؟':{
       const g=sum(FILT.filter(r=>r.group==='کالا'));
-      answer=`<div class="card"><div class="card-head"><h3>🛒 پاسخ</h3></div><div class="card-body"><div class="kpi-v" style="font-size:1.8rem">${fmtS(g)} ریال</div><p style="color:var(--t2);font-size:.8rem;margin-top:6px">مجموع خرید کالا در فیلترهای فعلی</p></div></div>`;break;
+      answer=`<div class="card"><div class="card-head"><h3>🛒 پاسخ</h3></div><div class="card-body"><div class="kpi-v" style="font-size:1.6rem">${fmtS(g)} ریال</div><p style="color:var(--t2);font-size:.78rem;margin-top:6px">مجموع خرید کالا در فیلترهای فعلی</p></div></div>`;break;
     }
     case 'مجموع خرید خدمات چقدر است؟':{
       const s=sum(FILT.filter(r=>r.group==='خدمات'));
-      answer=`<div class="card"><div class="card-head"><h3>🔧 پاسخ</h3></div><div class="card-body"><div class="kpi-v" style="font-size:1.8rem">${fmtS(s)} ریال</div><p style="color:var(--t2);font-size:.8rem;margin-top:6px">مجموع خرید خدمات در فیلترهای فعلی</p></div></div>`;break;
+      answer=`<div class="card"><div class="card-head"><h3>🔧 پاسخ</h3></div><div class="card-body"><div class="kpi-v" style="font-size:1.6rem">${fmtS(s)} ریال</div><p style="color:var(--t2);font-size:.78rem;margin-top:6px">مجموع خرید خدمات در فیلترهای فعلی</p></div></div>`;break;
     }
     case 'گران‌ترین خرید چه بوده؟':{
       const max=FILT.reduce((m,r)=>r.total>(m?.total||0)?r:m,null);
       answer=max?`<div class="card"><div class="card-head"><h3>💎 پاسخ</h3></div><div class="card-body">
-        <div class="kpi-v" style="font-size:1.5rem;margin-bottom:12px">${fmt(max.total)} ریال</div>
-        <p style="font-size:.85rem;color:var(--t2)">کالا: <b style="color:var(--t1)">${max.item}</b></p>
-        <p style="font-size:.85rem;color:var(--t2)">فروشنده: <b style="color:var(--t1)">${max.supplier}</b></p>
-        <p style="font-size:.85rem;color:var(--t2)">تاریخ: <b style="color:var(--t1)">${max.date}</b></p>
-        <p style="font-size:.85rem;color:var(--t2)">دسته: <b style="color:var(--t1)">${max.category}</b></p>
+        <div class="kpi-v" style="font-size:1.4rem;margin-bottom:12px">${fmt(max.total)} ریال</div>
+        <p style="font-size:.82rem;color:var(--t2)">کالا: <b style="color:var(--t1)">${max.item}</b></p>
+        <p style="font-size:.82rem;color:var(--t2)">فروشنده: <b style="color:var(--t1)">${max.supplier}</b></p>
+        <p style="font-size:.82rem;color:var(--t2)">تاریخ: <b style="color:var(--t1)">${max.date}</b></p>
+        <p style="font-size:.82rem;color:var(--t2)">دسته: <b style="color:var(--t1)">${max.category}</b></p>
       </div></div>`:'<div class="empty"><p>داده‌ای یافت نشد</p></div>';break;
     }
     case 'میانگین هر خرید چقدر است؟':{
-      const avg=FILT.length?sum(FILT)/FILT.length:0;
-      answer=`<div class="card"><div class="card-head"><h3>📊 پاسخ</h3></div><div class="card-body"><div class="kpi-v" style="font-size:1.8rem">${fmtS(avg)} ریال</div><p style="color:var(--t2);font-size:.8rem;margin-top:6px">میانگین ${fmt(FILT.length)} خرید</p></div></div>`;break;
+      const a=FILT.length?sum(FILT)/FILT.length:0;
+      answer=`<div class="card"><div class="card-head"><h3>📊 پاسخ</h3></div><div class="card-body"><div class="kpi-v" style="font-size:1.6rem">${fmtS(a)} ریال</div><p style="color:var(--t2);font-size:.78rem;margin-top:6px">میانگین ${fmt(FILT.length)} خرید</p></div></div>`;break;
     }
     case 'کدام فصل بیشترین خرید را داشته؟':{
       const seasons=groupBy(FILT,'season');
@@ -907,9 +1235,10 @@ function askQuestion(q){
   document.getElementById('askResult').innerHTML=answer;
 }
 
-/* ═══ PAGE 11: EXCEPTIONS (CORRECTED!) ═══ */
+/* ═══════════════════════════════════════════
+   PAGE 11: EXCEPTIONS
+   ═══════════════════════════════════════════ */
 function renderExceptions(el){
-  // Use the actual excludedSuppliers from data.json
   const excludedRecords=RAW.filter(r=>EXCLUDED_CODES.includes(r.supplierCode));
   const totalExcluded=sum(excludedRecords);
 
@@ -938,7 +1267,7 @@ function renderExceptions(el){
         <td>${fmt(s.count)}</td>
         <td style="font-weight:700;color:var(--a4)">${fmt(s.amount)}</td>
         <td>${fmtS(s.count>0?s.amount/s.count:0)}</td>
-        <td><div class="prog" style="width:80px;display:inline-block;vertical-align:middle"><div class="prog-fill" style="width:${pct}%;background:linear-gradient(135deg,#fdcb6e,#f39c12)"></div></div> <span style="font-size:.65rem">${pct}%</span></td>
+        <td><div class="prog" style="width:80px;display:inline-block;vertical-align:middle"><div class="prog-fill" style="width:${pct}%;background:linear-gradient(135deg,#fdcb6e,#f39c12)"></div></div> <span style="font-size:.6rem">${pct}%</span></td>
       </tr>`;
     }).join('')}
     </tbody></table></div></div>
@@ -961,7 +1290,9 @@ function renderExceptions(el){
   charts.excluded=new Chart(document.getElementById('chExcluded'),{type:'bar',data:{labels:EXCLUDED_SUPPLIERS.map(s=>s.name),datasets:[{data:EXCLUDED_SUPPLIERS.map(s=>s.amount),backgroundColor:['rgba(253,203,110,.6)','rgba(116,185,255,.6)','rgba(253,121,168,.6)','rgba(85,239,196,.6)','rgba(108,92,231,.6)'],borderColor:['#fdcb6e','#74b9ff','#fd79a8','#55efc4','#6c5ce7'],borderWidth:1,borderRadius:5}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ریال'}}},scales:{x:{ticks:{callback:v=>fmtS(v),color:'#55556a',font:{family:'Vazirmatn',size:9}},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#8888a8',font:{family:'Vazirmatn',size:10}},grid:{display:false}}}}});
 }
 
-/* ═══ PAGE 12: SEARCH ═══ */
+/* ═══════════════════════════════════════════
+   PAGE 12: SEARCH
+   ═══════════════════════════════════════════ */
 function renderSearch(el){
   el.innerHTML=filterBarHTML()+`
   <div class="card anim" style="margin-bottom:20px">
@@ -1003,7 +1334,7 @@ function doAdvancedSearch(){
   document.getElementById('searchResults').innerHTML=`
   <div class="card anim">
     <div class="card-head"><h3>📋 نتایج جستجو (${fmt(results.length)} مورد)</h3>
-    <span style="font-size:.75rem;color:var(--a2);font-weight:700">مجموع: ${fmtS(sum(results))} ریال</span></div>
+    <span style="font-size:.72rem;color:var(--a2);font-weight:700">مجموع: ${fmtS(sum(results))} ریال</span></div>
     <div class="card-body np"><div class="tbl-wrap" style="max-height:400px"><table><thead><tr>
       <th>تاریخ</th><th>فروشنده</th><th>شرح</th><th>دسته</th><th>گروه</th><th>پروژه</th><th>مبلغ</th>
     </tr></thead><tbody>
@@ -1016,7 +1347,9 @@ function doAdvancedSearch(){
   </div>`;
 }
 
-/* ═══ PAGE 13: DATA CENTER ═══ */
+/* ═══════════════════════════════════════════
+   PAGE 13: DATA CENTER
+   ═══════════════════════════════════════════ */
 function renderDataCenter(el){
   const fields=['supplierCode','supplier','invoice','date','itemCode','item','unit','project','notes','qty','rate','amount','discount','vat','total','category','group','unitPrice','year','month','season','period'];
 
@@ -1038,7 +1371,7 @@ function renderDataCenter(el){
     <div class="card-body np"><div class="tbl-wrap" style="max-height:450px"><table><thead><tr>
       ${fields.map(f=>`<th>${f}</th>`).join('')}
     </tr></thead><tbody>
-    ${FILT.slice(0,100).map(r=>`<tr>${fields.map(f=>`<td style="font-size:.65rem;max-width:120px;overflow:hidden;text-overflow:ellipsis">${r[f]??'—'}</td>`).join('')}</tr>`).join('')}
+    ${FILT.slice(0,100).map(r=>`<tr>${fields.map(f=>`<td style="font-size:.6rem;max-width:120px;overflow:hidden;text-overflow:ellipsis">${r[f]??'—'}</td>`).join('')}</tr>`).join('')}
     </tbody></table></div></div>
     <div class="tbl-footer"><span>نمایش ۱۰۰ رکورد اول از ${fmt(FILT.length)}</span></div>
   </div>`;
@@ -1056,7 +1389,8 @@ function exportJSON(){
 }
 
 /* ═══ INIT ═══ */
-loadData();
+document.getElementById('loader').classList.add('h');
+document.getElementById('uploadScr').classList.add('show');
 </script>
 </body>
 </html>
