@@ -3,13 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>راموز | Purchase Intelligence</title>
+<title>راموز — داشبورد هوشمند تحلیل خرید</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════
-   CSS VARIABLES & RESET
-   ═══════════════════════════════════════════ */
 :root {
   --bg-primary: #06060f;
   --bg-secondary: #0c0c1d;
@@ -42,7 +39,6 @@
 }
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-
 html { scroll-behavior: smooth; }
 
 body {
@@ -58,9 +54,6 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--accent-1); border-radius: 10px; }
 
-/* ═══════════════════════════════════════════
-   ANIMATED BACKGROUND
-   ═══════════════════════════════════════════ */
 .bg-mesh {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background: var(--gradient-hero);
@@ -87,9 +80,6 @@ body {
   66% { transform: translate(-40px, 40px) scale(0.95); }
 }
 
-/* ═══════════════════════════════════════════
-   LOGIN PAGE
-   ═══════════════════════════════════════════ */
 .login-page {
   position: fixed; inset: 0; z-index: 9999;
   display: flex; align-items: center; justify-content: center;
@@ -167,12 +157,8 @@ body {
   margin-top: 25px; font-size: 0.75rem; color: var(--text-muted);
 }
 
-/* ═══════════════════════════════════════════
-   LAYOUT
-   ═══════════════════════════════════════════ */
 .app { display: flex; min-height: 100vh; position: relative; z-index: 1; }
 
-/* ─── SIDEBAR ─── */
 .sidebar {
   width: var(--sidebar-w);
   background: rgba(10,10,25,0.85);
@@ -226,7 +212,6 @@ body {
 }
 .nav-item .icon { font-size: 1.1rem; width: 24px; text-align: center; }
 
-/* ─── MAIN ─── */
 .main {
   flex: 1;
   margin-right: var(--sidebar-w);
@@ -234,7 +219,6 @@ body {
   min-height: 100vh;
 }
 
-/* ─── HEADER ─── */
 .header {
   height: var(--header-h);
   background: rgba(10,10,25,0.6);
@@ -257,12 +241,8 @@ body {
 }
 .header-btn:hover { border-color: var(--accent-1); color: var(--accent-1); }
 
-/* ─── CONTENT ─── */
 .content { padding: 28px 30px; flex: 1; }
 
-/* ═══════════════════════════════════════════
-   FILTER BAR
-   ═══════════════════════════════════════════ */
 .filter-bar {
   background: var(--bg-card);
   backdrop-filter: blur(20px);
@@ -297,7 +277,6 @@ body {
 }
 .filter-group select option { background: #1a1a2e; color: #e8e8f0; }
 
-/* Group Toggle */
 .group-toggle {
   display: flex; gap: 0; border-radius: var(--radius-xs); overflow: hidden;
   border: 1px solid var(--border-glass);
@@ -334,9 +313,6 @@ body {
 }
 .filter-reset:hover { background: rgba(253,121,168,0.2); }
 
-/* ═══════════════════════════════════════════
-   KPI CARDS
-   ═══════════════════════════════════════════ */
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -386,9 +362,6 @@ body {
 .kpi-card:nth-child(5) .kpi-value { background: var(--gradient-5); -webkit-background-clip: text; }
 .kpi-sub { font-size: 0.72rem; color: var(--text-secondary); margin-top: 4px; }
 
-/* ═══════════════════════════════════════════
-   CHARTS
-   ═══════════════════════════════════════════ */
 .charts-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -418,9 +391,6 @@ body {
 .chart-container { position: relative; width: 100%; }
 .chart-container canvas { width: 100% !important; }
 
-/* ═══════════════════════════════════════════
-   DATA TABLE
-   ═══════════════════════════════════════════ */
 .table-card {
   background: var(--bg-card);
   backdrop-filter: blur(20px);
@@ -518,9 +488,6 @@ tbody td:first-child { color: var(--text-primary); font-weight: 500; }
 }
 .pagination button:disabled { opacity: 0.3; cursor: default; }
 
-/* ═══════════════════════════════════════════
-   LOADING
-   ═══════════════════════════════════════════ */
 .loader-overlay {
   position: fixed; inset: 0; z-index: 10000;
   background: var(--bg-primary);
@@ -540,9 +507,6 @@ tbody td:first-child { color: var(--text-primary); font-weight: 500; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loader-text { color: var(--text-secondary); font-size: 0.9rem; }
 
-/* ═══════════════════════════════════════════
-   RESPONSIVE
-   ═══════════════════════════════════════════ */
 @media (max-width: 1024px) {
   .charts-grid { grid-template-columns: 1fr; }
   .sidebar { transform: translateX(100%); }
@@ -566,9 +530,6 @@ tbody td:first-child { color: var(--text-primary); font-weight: 500; }
   cursor: pointer; color: var(--text-primary); font-size: 1.2rem;
 }
 
-/* ═══════════════════════════════════════════
-   ANIMATIONS
-   ═══════════════════════════════════════════ */
 @keyframes fadeUp {
   from { opacity:0; transform: translateY(20px); }
   to { opacity:1; transform: translateY(0); }
@@ -580,10 +541,8 @@ tbody td:first-child { color: var(--text-primary); font-weight: 500; }
 .delay-4 { animation-delay: 0.4s; }
 .delay-5 { animation-delay: 0.5s; }
 
-/* Number animation */
 .counting { transition: all 0.3s; }
 
-/* Top suppliers mini bar */
 .top-list { list-style: none; }
 .top-list li {
   display: flex; align-items: center; justify-content: space-between;
@@ -615,16 +574,13 @@ tbody td:first-child { color: var(--text-primary); font-weight: 500; }
 </head>
 <body>
 
-<!-- LOADER -->
 <div class="loader-overlay" id="loader">
   <div class="loader-spinner"></div>
   <div class="loader-text">در حال بارگذاری داده‌ها...</div>
 </div>
 
-<!-- ANIMATED BG -->
 <div class="bg-mesh"></div>
 
-<!-- LOGIN -->
 <div class="login-page" id="loginPage">
   <div class="login-box">
     <div class="login-logo">راموز</div>
@@ -642,10 +598,8 @@ tbody td:first-child { color: var(--text-primary); font-weight: 500; }
   </div>
 </div>
 
-<!-- APP -->
 <div class="app" id="app" style="display:none;">
 
-  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
       <div class="brand-icon">ر</div>
@@ -686,7 +640,6 @@ tbody td:first-child { color: var(--text-primary); font-weight: 500; }
     </nav>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
     <header class="header">
       <div style="display:flex;align-items:center;gap:12px;">
@@ -701,7 +654,6 @@ tbody td:first-child { color: var(--text-primary); font-weight: 500; }
 
     <div class="content">
 
-      <!-- FILTERS -->
       <div class="filter-bar animate-in">
         <div class="filter-group">
           <label>📅 سال</label>
@@ -744,7 +696,6 @@ tbody td:first-child { color: var(--text-primary); font-weight: 500; }
         <button class="filter-reset" onclick="resetFilters()">↺ پاک‌سازی فیلترها</button>
       </div>
 
-      <!-- KPI -->
       <div class="kpi-grid" id="kpiGrid">
         <div class="kpi-card animate-in delay-1">
           <div class="kpi-icon">💰</div>
@@ -778,7 +729,6 @@ tbody td:first-child { color: var(--text-primary); font-weight: 500; }
         </div>
       </div>
 
-      <!-- CHARTS -->
       <div class="charts-grid">
         <div class="chart-card animate-in delay-2">
           <div class="chart-title"><span class="dot" style="background:var(--accent-1)"></span> روند خرید ماهانه</div>
@@ -802,7 +752,6 @@ tbody td:first-child { color: var(--text-primary); font-weight: 500; }
         </div>
       </div>
 
-      <!-- TABLE -->
       <div class="table-card animate-in delay-5">
         <div class="table-header">
           <h3>📋 جزئیات خریدها <span id="tableCount" style="color:var(--text-muted);font-weight:400;font-size:0.8rem;"></span></h3>
@@ -836,9 +785,6 @@ tbody td:first-child { color: var(--text-primary); font-weight: 500; }
 </div>
 
 <script>
-/* ═══════════════════════════════════════════
-   GLOBAL STATE
-   ═══════════════════════════════════════════ */
 let RAW_DATA = [];
 let filteredData = [];
 let currentPage = 1;
@@ -847,9 +793,6 @@ let sortField = 'date';
 let sortDir = -1;
 let charts = {};
 
-/* ═══════════════════════════════════════════
-   LOGIN
-   ═══════════════════════════════════════════ */
 function doLogin() {
   document.getElementById('loginPage').classList.add('hidden');
   setTimeout(() => {
@@ -860,66 +803,83 @@ function doLogin() {
 }
 document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 
-/* ═══════════════════════════════════════════
-   LOAD DATA
-   ═══════════════════════════════════════════ */
 async function loadData() {
   try {
     const resp = await fetch('data.json');
     const json = await resp.json();
-    // The data might be structured as { records: [...] } or just an array
+    
+    console.log('Data structure:', typeof json, Array.isArray(json) ? 'Array' : 'Object');
+    console.log('Keys:', Object.keys(json));
+    
+    // Extract data intelligently
     if (Array.isArray(json)) {
       RAW_DATA = json;
-    } else if (json.records) {
+    } else if (json.data && Array.isArray(json.data)) {
+      RAW_DATA = json.data;
+    } else if (json.records && Array.isArray(json.records)) {
       RAW_DATA = json.records;
     } else {
-      // Try to find the array with purchase records
+      // Try to find the first array in the object
       for (const key of Object.keys(json)) {
-        if (Array.isArray(json[key]) && json[key].length > 0 && json[key][0].supplier) {
+        if (Array.isArray(json[key]) && json[key].length > 0) {
           RAW_DATA = json[key];
+          console.log(`Found data in key: ${key}`);
           break;
         }
       }
     }
+    
+    console.log(`Loaded ${RAW_DATA.length} records`);
+    
+    if (RAW_DATA.length === 0) {
+      throw new Error('No data found in data.json');
+    }
+    
     initDashboard();
   } catch(e) {
     console.error('Error loading data:', e);
-    document.getElementById('loader').innerHTML = '<div style="color:var(--accent-3);text-align:center;"><p style="font-size:1.2rem;margin-bottom:10px;">⚠ خطا در بارگذاری داده‌ها</p><p style="font-size:0.85rem;color:var(--text-secondary);">لطفاً فایل data.json را در کنار index.html قرار دهید.</p></div>';
+    document.getElementById('loader').innerHTML = `
+      <div style="color:var(--accent-3);text-align:center;max-width:500px;">
+        <p style="font-size:1.2rem;margin-bottom:10px;">⚠ خطا در بارگذاری داده‌ها</p>
+        <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:15px;">${e.message}</p>
+        <p style="font-size:0.75rem;color:var(--text-muted);">لطفاً فایل data.json را در کنار index.html قرار دهید و صفحه را رفرش کنید.</p>
+      </div>
+    `;
   }
 }
 
-/* ═══════════════════════════════════════════
-   INIT
-   ═══════════════════════════════════════════ */
 function initDashboard() {
   populateFilters();
   applyFilters();
   document.getElementById('loader').classList.add('hidden');
 
-  // Bind filter events
   ['filterYear','filterSeason','filterMonth','filterCategory'].forEach(id => {
     document.getElementById(id).addEventListener('change', () => { currentPage=1; applyFilters(); });
   });
   document.getElementById('tableSearch').addEventListener('input', () => { currentPage=1; renderTable(); });
 }
 
-/* ═══════════════════════════════════════════
-   POPULATE FILTERS
-   ═══════════════════════════════════════════ */
 function populateFilters() {
-  const years = [...new Set(RAW_DATA.map(r => r.year))].sort();
-  const cats = [...new Set(RAW_DATA.map(r => r.category))].sort();
+  const years = [...new Set(RAW_DATA.map(r => r.year))].filter(y => y).sort();
+  const cats = [...new Set(RAW_DATA.map(r => r.category))].filter(c => c).sort();
 
   const yearSel = document.getElementById('filterYear');
-  years.forEach(y => { const o = document.createElement('option'); o.value=y; o.textContent=y; yearSel.appendChild(o); });
+  years.forEach(y => { 
+    const o = document.createElement('option'); 
+    o.value=y; 
+    o.textContent=y; 
+    yearSel.appendChild(o); 
+  });
 
   const catSel = document.getElementById('filterCategory');
-  cats.forEach(c => { if(c) { const o = document.createElement('option'); o.value=c; o.textContent=c; catSel.appendChild(o); } });
+  cats.forEach(c => { 
+    const o = document.createElement('option'); 
+    o.value=c; 
+    o.textContent=c; 
+    catSel.appendChild(o); 
+  });
 }
 
-/* ═══════════════════════════════════════════
-   GROUP TOGGLE
-   ═══════════════════════════════════════════ */
 function setGroup(btn) {
   document.querySelectorAll('#groupToggle button').forEach(b => b.className = '');
   const g = btn.dataset.group;
@@ -930,9 +890,6 @@ function setGroup(btn) {
   applyFilters();
 }
 
-/* ═══════════════════════════════════════════
-   APPLY FILTERS
-   ═══════════════════════════════════════════ */
 function applyFilters() {
   const year = document.getElementById('filterYear').value;
   const season = document.getElementById('filterSeason').value;
@@ -949,6 +906,8 @@ function applyFilters() {
     if (group && r.group !== group) return false;
     return true;
   });
+
+  console.log(`Filtered: ${filteredData.length} records`);
 
   updateKPIs();
   updateCharts();
@@ -967,9 +926,6 @@ function resetFilters() {
   applyFilters();
 }
 
-/* ═══════════════════════════════════════════
-   FORMAT HELPERS
-   ═══════════════════════════════════════════ */
 function fmt(n) {
   if (n == null || isNaN(n)) return '—';
   return Math.round(n).toLocaleString('fa-IR');
@@ -982,16 +938,12 @@ function fmtShort(n) {
 }
 const monthNames = ['','فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 
-/* ═══════════════════════════════════════════
-   KPIs
-   ═══════════════════════════════════════════ */
 function updateKPIs() {
   const total = filteredData.reduce((s,r) => s + (r.total||0), 0);
   const count = filteredData.length;
   const suppliers = new Set(filteredData.map(r => r.supplier)).size;
   const avg = count ? total / count : 0;
 
-  // Top category
   const catMap = {};
   filteredData.forEach(r => {
     if (r.category) catMap[r.category] = (catMap[r.category]||0) + (r.total||0);
@@ -1021,9 +973,6 @@ function animateValue(id, text) {
   }, 150);
 }
 
-/* ═══════════════════════════════════════════
-   CHARTS
-   ═══════════════════════════════════════════ */
 const chartColors = [
   '#6c5ce7','#00cec9','#fd79a8','#fdcb6e','#55efc4','#74b9ff',
   '#e17055','#a29bfe','#fab1a0','#81ecec','#ffeaa7','#dfe6e9',
@@ -1229,9 +1178,6 @@ function updateSeasonalChart() {
   });
 }
 
-/* ═══════════════════════════════════════════
-   TABLE
-   ═══════════════════════════════════════════ */
 function getTableData() {
   const q = document.getElementById('tableSearch').value.trim().toLowerCase();
   let data = filteredData;
@@ -1274,7 +1220,6 @@ function renderTable() {
 
   document.getElementById('tableInfo').textContent = `نمایش ${start+1} تا ${Math.min(start+PAGE_SIZE, data.length)} از ${fmt(data.length)}`;
 
-  // Pagination
   const pag = document.getElementById('pagination');
   let html = `<button ${currentPage===1?'disabled':''} onclick="goPage(${currentPage-1})">‹</button>`;
   const maxBtns = 7;
@@ -1296,9 +1241,6 @@ function sortTable(field) {
   renderTable();
 }
 
-/* ═══════════════════════════════════════════
-   EXPORT
-   ═══════════════════════════════════════════ */
 function exportCSV() {
   const data = getTableData();
   const headers = ['تاریخ','فروشنده','شرح','دسته‌بندی','گروه','تعداد','فی','مبلغ کل'];
